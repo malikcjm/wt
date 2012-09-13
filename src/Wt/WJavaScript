@@ -27,7 +27,7 @@ namespace Wt {
  * The signal is identified by a unique name within the scope of a
  * WObject, or a unique global name (when declaring the signal in your
  * WApplication).
- * 
+ *
  * The signal supports up to 6 arguments. Values for these arguments
  * may be specified in the JavaScript Wt.emit() (or the deprecated
  * global function WtSignalEmit()).
@@ -108,8 +108,8 @@ namespace Wt {
  * \ingroup signalslot
  */
 template <typename A1 = NoClass, typename A2 = NoClass,
-	  typename A3 = NoClass, typename A4 = NoClass,
-	  typename A5 = NoClass, typename A6 = NoClass>
+      typename A3 = NoClass, typename A4 = NoClass,
+      typename A5 = NoClass, typename A6 = NoClass>
 class JSignal : public EventSignalBase
 {
 public:
@@ -131,7 +131,7 @@ public:
    * \sa \link WObject::implementStateless() stateless slot learning\endlink
    */
   JSignal(WObject *object, const std::string& name,
-	  bool collectSlotJavaScript = false);
+      bool collectSlotJavaScript = false);
 
   /*! \brief Destructor.
    */
@@ -162,11 +162,11 @@ public:
    * \sa createEventCall()
    */
   const std::string createCall(const std::string& arg1 = std::string(),
-			       const std::string& arg2 = std::string(),
-			       const std::string& arg3 = std::string(),
-			       const std::string& arg4 = std::string(),
-			       const std::string& arg5 = std::string(),
-			       const std::string& arg6 = std::string()) const;
+                   const std::string& arg2 = std::string(),
+                   const std::string& arg3 = std::string(),
+                   const std::string& arg4 = std::string(),
+                   const std::string& arg5 = std::string(),
+                   const std::string& arg6 = std::string()) const;
 
   /*! \brief Returns a JavaScript call that triggers the signal, passing
    *         the original event too.
@@ -189,12 +189,12 @@ public:
    *
    */
   const std::string createEventCall(const std::string& jsObject,
-				    const std::string& jsEvent,
-				    const std::string& arg1 = std::string(),
-				    const std::string& arg2 = std::string(),
-				    const std::string& arg3 = std::string(),
-				    const std::string& arg4 = std::string(),
-				    const std::string& arg5 = std::string())
+                    const std::string& jsEvent,
+                    const std::string& arg1 = std::string(),
+                    const std::string& arg2 = std::string(),
+                    const std::string& arg3 = std::string(),
+                    const std::string& arg4 = std::string(),
+                    const std::string& arg5 = std::string())
     const;
 
   /*! \brief Returns whether the signal is connected to at least one slot.
@@ -208,14 +208,14 @@ public:
    *
    * When the receiver function is an object method, the signal will
    * automatically be disconnected when the object is deleted, as long as the
-   * object inherits from WObject or boost::signals::trackable.
+   * object inherits from WObject or bs::trackable.
    *
    * The function may leave 1 parameters unbound (e.g. using
    * boost::bind placeholders _1) that may be bound to the event
    * detail object passed by the signal.
    */
   template<class F>
-    boost::signals::connection connect(const F& function);
+    bs::connection connect(const F& function);
 
   /*! \brief Connect a slot that takes no arguments.
    *
@@ -235,7 +235,7 @@ public:
    * addition running the slot on the server.
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
   /*! \brief Connect a slot that takes one argument.
    *
@@ -244,10 +244,10 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(A1));
+    bs::connection connect(T *target, void (V::*method)(A1));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&));
+    bs::connection connect(T *target, void (V::*method)(const A1&));
 
   /*! \brief Connect a slot that takes two arguments.
    *
@@ -256,7 +256,7 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(A1, A2));
+    bs::connection connect(T *target, void (V::*method)(A1, A2));
 
   /*! \brief Connect a slot that takes three arguments.
    *
@@ -265,8 +265,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3));
 
   /*! \brief Connect a slot that takes four arguments.
    *
@@ -275,8 +275,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4));
 
   /*! \brief Connect a slot that takes five arguments.
    *
@@ -285,8 +285,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4,A5));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4,A5));
 
   /*! \brief Connect a slot that takes six arguments.
    *
@@ -295,8 +295,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4,A5,A6));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4,A5,A6));
 
   /*! \brief Connects a JavaScript function.
    *
@@ -336,8 +336,8 @@ public:
    * arguments.
    */
   void emit(A1 a1 = NoClass::none, A2 a2 = NoClass::none,
-	    A3 a3 = NoClass::none, A4 a4 = NoClass::none,
-	    A5 a5 = NoClass::none, A6 a6 = NoClass::none);
+        A3 a3 = NoClass::none, A4 a4 = NoClass::none,
+        A5 a5 = NoClass::none, A6 a6 = NoClass::none);
 
   /*! \brief Emit the signal.
    *
@@ -346,11 +346,11 @@ public:
    * \sa emit
    */
   void operator()(A1 a1 = NoClass::none, A2 a2 = NoClass::none,
-		  A3 a3 = NoClass::none, A4 a4 = NoClass::none,
-		  A5 a5 = NoClass::none, A6 a6 = NoClass::none);
+          A3 a3 = NoClass::none, A4 a4 = NoClass::none,
+          A5 a5 = NoClass::none, A6 a6 = NoClass::none);
 
-  virtual boost::signals::connection connect(WObject *target,
-					     void (WObject::*method)());
+  virtual bs::connection connect(WObject *target,
+                         void (WObject::*method)());
 
 private:
   JSignal(const JSignal<A1, A2, A3, A4, A5, A6>&);
@@ -360,7 +360,8 @@ private:
   mutable std::string senderId_;
   void processDynamic(const JavaScriptEvent& e);
 
-  boost::signal6<void, A1, A2, A3, A4, A5, A6> *impl_;
+  //boost::signal6<void, A1, A2, A3, A4, A5, A6> *impl_;
+  boost::signals2::signal<void(A1, A2, A3, A4, A5, A6)> *impl_;
 };
 
 #ifndef WT_CNOR
@@ -370,10 +371,10 @@ private:
  */
 template<>
 class WT_API JSignal<void> : public JSignal<>
-{ 
+{
 public:
   JSignal(WObject *object, const std::string& name,
-	  bool collectSlotJavaScript = false);
+      bool collectSlotJavaScript = false);
 };
 
 #else // WT_CNOR
@@ -382,12 +383,12 @@ class WT_API JSignal0 : public JSignal<NoClass>
 {
 public:
   JSignal0(WObject *object, const std::string& name,
-	   bool collectSlotJavaScript = false);
+       bool collectSlotJavaScript = false);
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
-  
+
   void connect(const std::string& function);
   void connect(const char * function);
 
@@ -401,10 +402,10 @@ public:
 #ifndef WT_CNOR
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 JSignal<A1, A2, A3, A4, A5, A6>::JSignal(WObject *object,
-					 const std::string& name,
-					 bool collectSlotJavaScript)
+                     const std::string& name,
+                     bool collectSlotJavaScript)
   : EventSignalBase(0, object),
     name_(name),
     collectSlotJavaScript_(collectSlotJavaScript),
@@ -412,7 +413,7 @@ JSignal<A1, A2, A3, A4, A5, A6>::JSignal(WObject *object,
 { }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 JSignal<A1, A2, A3, A4, A5, A6>::~JSignal()
 {
   prepareDestruct();
@@ -420,7 +421,7 @@ JSignal<A1, A2, A3, A4, A5, A6>::~JSignal()
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 const std::string JSignal<A1, A2, A3, A4, A5, A6>::encodeCmd() const
 {
   if (senderId_.empty())
@@ -430,46 +431,47 @@ const std::string JSignal<A1, A2, A3, A4, A5, A6>::encodeCmd() const
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 const std::string JSignal<A1, A2, A3, A4, A5, A6>
 ::createCall(const std::string& arg1, const std::string& arg2,
-	     const std::string& arg3, const std::string& arg4,
-	     const std::string& arg5, const std::string& arg6) const
+         const std::string& arg3, const std::string& arg4,
+         const std::string& arg5, const std::string& arg6) const
 {
   return EventSignalBase::createUserEventCall(std::string(), std::string(),
-					      name_, arg1, arg2, arg3,
-					      arg4, arg5, arg6);
+                          name_, arg1, arg2, arg3,
+                          arg4, arg5, arg6);
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 const std::string JSignal<A1, A2, A3, A4, A5, A6>
 ::createEventCall(const std::string& jsObject, const std::string& jsEvent,
-		  const std::string& arg1, const std::string& arg2,
-		  const std::string& arg3, const std::string& arg4,
-		  const std::string& arg5) const
+          const std::string& arg1, const std::string& arg2,
+          const std::string& arg3, const std::string& arg4,
+          const std::string& arg5) const
 {
   return EventSignalBase::createUserEventCall(jsObject, jsEvent,
-					      name_, arg1, arg2, arg3,
-					      arg4, arg5, "");
+                          name_, arg1, arg2, arg3,
+                          arg4, arg5, "");
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class F>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(const F& function)
 {
   exposeSignal();
   if (!impl_)
-    impl_ = new boost::signal6<void, A1, A2, A3, A4, A5, A6>;
+    impl_ = new boost::signals2::signal<void(A1, A2, A3, A4, A5, A6)>;
+    //impl_ = new boost::signal6<void, A1, A2, A3, A4, A5, A6>;
   return impl_->connect(function);
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4, A5, A6))
 {
   assert(dynamic_cast<V *>(target));
@@ -478,9 +480,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4, A5))
 {
   assert(dynamic_cast<V *>(target));
@@ -488,9 +490,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4))
 {
   assert(dynamic_cast<V *>(target));
@@ -498,9 +500,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3))
 {
   assert(dynamic_cast<V *>(target));
@@ -508,9 +510,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2))
 {
   assert(dynamic_cast<V *>(target));
@@ -518,9 +520,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1))
 {
   assert(dynamic_cast<V *>(target));
@@ -528,9 +530,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&))
 {
   assert(dynamic_cast<V *>(target));
@@ -538,9 +540,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)())
 {
   exposeSignal();
@@ -557,7 +559,7 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::connect(const std::string& function)
 {
   if (!collectSlotJavaScript_) {
@@ -570,7 +572,7 @@ void JSignal<A1, A2, A3, A4, A5, A6>::connect(const std::string& function)
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::connect(const char *function)
 {
   if (!collectSlotJavaScript_) {
@@ -583,7 +585,7 @@ void JSignal<A1, A2, A3, A4, A5, A6>::connect(const char *function)
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::connect(JSlot& slot)
 {
   if (!collectSlotJavaScript_) {
@@ -596,8 +598,8 @@ void JSignal<A1, A2, A3, A4, A5, A6>::connect(JSlot& slot)
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
-boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
+      typename A4, typename A5, typename A6>
+bs::connection JSignal<A1, A2, A3, A4, A5, A6>
 ::connect(WObject *target, void (WObject::*method)())
 {
   exposeSignal();
@@ -609,9 +611,9 @@ boost::signals::connection JSignal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::emit(A1 a1, A2 a2, A3 a3,
-					   A4 a4, A5 a5, A6 a6)
+                       A4 a4, A5 a5, A6 a6)
 {
   if (impl_) {
     pushSender(sender());
@@ -621,15 +623,15 @@ void JSignal<A1, A2, A3, A4, A5, A6>::emit(A1 a1, A2 a2, A3 a3,
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::operator()(A1 a1, A2 a2, A3 a3,
-						 A4 a4, A5 a5, A6 a6)
+                         A4 a4, A5 a5, A6 a6)
 {
   emit(a1, a2, a3, a4, a5, a6);
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 bool JSignal<A1, A2, A3, A4, A5, A6>::isConnected() const
 {
   return impl_ ? impl_->num_slots() > 0 : EventSignalBase::isConnected();
@@ -650,8 +652,8 @@ struct SignalArgTraits
       return boost::lexical_cast<T>(v);
     } catch (boost::bad_lexical_cast) {
       Wt::log("error") << "JSignal: bad argument format: '"
-		<< jse.userEventArgs[argi] << "' for C++ type '"
-		<< typeid(T).name() << "'";
+        << jse.userEventArgs[argi] << "' for C++ type '"
+        << typeid(T).name() << "'";
       return T();
     }
   }
@@ -677,7 +679,7 @@ struct SignalArgTraits<NoClass>
   static NoClass unMarshal(const JavaScriptEvent& jse, int argi) {
     if ((unsigned)argi < jse.userEventArgs.size()) {
       Wt::log("error") << "JSignal: redundant JavaScript argument: '"
-		       << jse.userEventArgs[argi] << "'";
+               << jse.userEventArgs[argi] << "'";
     }
 
     return NoClass::none;
@@ -701,7 +703,7 @@ struct SignalArgTraits<WKeyEvent>
 };
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void JSignal<A1, A2, A3, A4, A5, A6>::processDynamic(const JavaScriptEvent& jse)
 {
   emit(SignalArgTraits<A1>::unMarshal(jse, 0),

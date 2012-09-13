@@ -18,6 +18,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #ifdef WT_WITH_SSL
 #include <boost/asio/ssl.hpp>
@@ -54,8 +55,8 @@ public:
 
   virtual ~Impl() { }
 
-  void setTimeout(int timeout) { 
-    timeout_ = timeout; 
+  void setTimeout(int timeout) {
+    timeout_ = timeout;
   }
 
   void setMaximumResponseSize(std::size_t bytes) {
@@ -63,7 +64,7 @@ public:
   }
 
   void request(const std::string& method, const std::string& server, int port,
-	       const std::string& path, const Message& message)
+           const std::string& path, const Message& message)
   {
     std::ostream request_stream(&requestBuf_);
     request_stream << method << " " << path << " HTTP/1.0\r\n";
@@ -74,8 +75,8 @@ public:
     }
 
     if (method == "POST")
-      request_stream << "Content-Length: " << message.body().length() 
-		     << "\r\n";
+      request_stream << "Content-Length: " << message.body().length()
+             << "\r\n";
 
     request_stream << "Connection: close\r\n\r\n";
 
@@ -86,9 +87,9 @@ public:
 
     startTimer();
     resolver_.async_resolve(query,
-			    boost::bind(&Impl::handleResolve, this,
-					boost::asio::placeholders::error,
-					boost::asio::placeholders::iterator));
+                boost::bind(&Impl::handleResolve, this,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::iterator));
   }
 
   void stop()
@@ -106,15 +107,15 @@ protected:
   typedef boost::function<void(const boost::system::error_code&)>
     ConnectHandler;
   typedef boost::function<void(const boost::system::error_code&,
-			       const std::size_t&)> IOHandler;
+                   const std::size_t&)> IOHandler;
 
   virtual tcp::socket& socket() = 0;
   virtual void asyncConnect(tcp::endpoint& endpoint,
-			    const ConnectHandler& handler) = 0;
+                const ConnectHandler& handler) = 0;
   virtual void asyncHandshake(const ConnectHandler& handler) = 0;
   virtual void asyncWriteRequest(const IOHandler& handler) = 0;
   virtual void asyncReadUntil(const std::string& s,
-			      const IOHandler& handler) = 0;
+                  const IOHandler& handler) = 0;
   virtual void asyncRead(const IOHandler& handler) = 0;
 
 private:
@@ -122,7 +123,7 @@ private:
   {
     timer_.expires_from_now(boost::posix_time::seconds(timeout_));
     timer_.async_wait(boost::bind(&Impl::timeout, shared_from_this(),
-				  boost::asio::placeholders::error));
+                  boost::asio::placeholders::error));
   }
 
   void cancelTimer()
@@ -135,14 +136,14 @@ private:
     if (e != boost::asio::error::operation_aborted) {
       boost::system::error_code ignored_ec;
       socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both,
-			ignored_ec);
+            ignored_ec);
 
       err_ = boost::asio::error::timed_out;
     }
   }
 
   void handleResolve(const boost::system::error_code& err,
-		     tcp::resolver::iterator endpoint_iterator)
+             tcp::resolver::iterator endpoint_iterator)
   {
     cancelTimer();
 
@@ -154,18 +155,18 @@ private:
 
       startTimer();
       asyncConnect(endpoint,
-		   boost::bind(&Impl::handleConnect,
-			       shared_from_this(),
-			       boost::asio::placeholders::error,
-			       ++endpoint_iterator));
+           boost::bind(&Impl::handleConnect,
+                   shared_from_this(),
+                   boost::asio::placeholders::error,
+                   ++endpoint_iterator));
     } else {
       err_ = err;
       complete();
     }
   }
- 
+
   void handleConnect(const boost::system::error_code& err,
-		     tcp::resolver::iterator endpoint_iterator)
+             tcp::resolver::iterator endpoint_iterator)
   {
     cancelTimer();
 
@@ -173,8 +174,8 @@ private:
       // The connection was successful. Do the handshake (SSL only)
       startTimer();
       asyncHandshake(boost::bind(&Impl::handleHandshake,
-				 shared_from_this(),
-				 boost::asio::placeholders::error));
+                 shared_from_this(),
+                 boost::asio::placeholders::error));
     } else if (endpoint_iterator != tcp::resolver::iterator()) {
       // The connection failed. Try the next endpoint in the list.
       socket().close();
@@ -194,10 +195,10 @@ private:
       // The handshake was successful. Send the request.
       startTimer();
       asyncWriteRequest
-	(boost::bind(&Impl::handleWriteRequest,
-		     shared_from_this(),
-		     boost::asio::placeholders::error,
-		     boost::asio::placeholders::bytes_transferred));
+    (boost::bind(&Impl::handleWriteRequest,
+             shared_from_this(),
+             boost::asio::placeholders::error,
+             boost::asio::placeholders::bytes_transferred));
     } else {
       err_ = err;
       complete();
@@ -205,7 +206,7 @@ private:
   }
 
   void handleWriteRequest(const boost::system::error_code& err,
-			  const std::size_t&)
+              const std::size_t&)
   {
     cancelTimer();
 
@@ -213,10 +214,10 @@ private:
       // Read the response status line.
       startTimer();
       asyncReadUntil("\r\n",
-		     boost::bind(&Impl::handleReadStatusLine,
-				 shared_from_this(),
-				 boost::asio::placeholders::error,
-				 boost::asio::placeholders::bytes_transferred));
+             boost::bind(&Impl::handleReadStatusLine,
+                 shared_from_this(),
+                 boost::asio::placeholders::error,
+                 boost::asio::placeholders::bytes_transferred));
     } else {
       err_ = err;
       complete();
@@ -237,13 +238,13 @@ private:
   }
 
   void handleReadStatusLine(const boost::system::error_code& err,
-			    const std::size_t& s)
+                const std::size_t& s)
   {
     cancelTimer();
 
     if (!err) {
       if (!addResponseSize(s))
-	return;
+    return;
 
       // Check that response is OK.
       std::istream response_stream(&responseBuf_);
@@ -255,9 +256,9 @@ private:
       std::getline(response_stream, status_message);
       if (!response_stream || http_version.substr(0, 5) != "HTTP/")
       {
-	err_ = boost::system::errc::make_error_code
-	  (boost::system::errc::protocol_error);
-	complete();
+    err_ = boost::system::errc::make_error_code
+      (boost::system::errc::protocol_error);
+    complete();
       }
 
       LOG_DEBUG(status_code << " " << status_message);
@@ -267,10 +268,10 @@ private:
       // Read the response headers, which are terminated by a blank line.
       startTimer();
       asyncReadUntil("\r\n\r\n",
-		     boost::bind(&Impl::handleReadHeaders,
-				 shared_from_this(),
-				 boost::asio::placeholders::error,
-				 boost::asio::placeholders::bytes_transferred));
+             boost::bind(&Impl::handleReadHeaders,
+                 shared_from_this(),
+                 boost::asio::placeholders::error,
+                 boost::asio::placeholders::bytes_transferred));
     } else {
       err_ = err;
       complete();
@@ -278,39 +279,39 @@ private:
   }
 
   void handleReadHeaders(const boost::system::error_code& err,
-			 const std::size_t& s)
+             const std::size_t& s)
   {
     cancelTimer();
 
     if (!err) {
       if (!addResponseSize(s))
-	return;
+    return;
 
       // Process the response headers.
       std::istream response_stream(&responseBuf_);
       std::string header;
       while (std::getline(response_stream, header) && header != "\r") {
-	std::size_t i = header.find(':');
-	if (i != std::string::npos) {
-	  std::string name = boost::trim_copy(header.substr(0, i));
-	  std::string value = boost::trim_copy(header.substr(i+1));
-	  response_.addHeader(name, value);
-	}
+    std::size_t i = header.find(':');
+    if (i != std::string::npos) {
+      std::string name = boost::trim_copy(header.substr(0, i));
+      std::string value = boost::trim_copy(header.substr(i+1));
+      response_.addHeader(name, value);
+    }
       }
 
       // Write whatever content we already have to output.
       if (responseBuf_.size() > 0) {
-	std::stringstream ss;
-	ss << &responseBuf_;
-	response_.addBodyText(ss.str());
+    std::stringstream ss;
+    ss << &responseBuf_;
+    response_.addBodyText(ss.str());
       }
 
       // Start reading remaining data until EOF.
       startTimer();
       asyncRead(boost::bind(&Impl::handleReadContent,
-			    shared_from_this(),
-			    boost::asio::placeholders::error,
-			    boost::asio::placeholders::bytes_transferred));
+                shared_from_this(),
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred));
     } else {
       err_ = err;
       complete();
@@ -318,13 +319,13 @@ private:
   }
 
   void handleReadContent(const boost::system::error_code& err,
-			 const std::size_t& s)
+             const std::size_t& s)
   {
     cancelTimer();
 
     if (!err) {
       if (!addResponseSize(s))
-	return;
+    return;
 
       std::stringstream ss;
       ss << &responseBuf_;
@@ -336,12 +337,12 @@ private:
       // Continue reading remaining data until EOF.
       startTimer();
       asyncRead(boost::bind(&Impl::handleReadContent,
-			    shared_from_this(),
-			    boost::asio::placeholders::error,
-			    boost::asio::placeholders::bytes_transferred));
+                shared_from_this(),
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred));
     } else if (err != boost::asio::error::eof
-	       && err != boost::asio::error::shut_down
-	       && err.value() != 335544539) {
+           && err != boost::asio::error::shut_down
+           && err.value() != 335544539) {
       err_ = err;
       complete();
     } else {
@@ -353,7 +354,7 @@ private:
   {
     if (server_)
       server_->post(sessionId_,
-		    boost::bind(&Impl::emitDone, shared_from_this()));
+            boost::bind(&Impl::emitDone, shared_from_this()));
     else
       emitDone();
   }
@@ -395,7 +396,7 @@ protected:
   }
 
   virtual void asyncConnect(tcp::endpoint& endpoint,
-			    const ConnectHandler& handler)
+                const ConnectHandler& handler)
   {
     socket_.async_connect(endpoint, handler);
   }
@@ -411,7 +412,7 @@ protected:
   }
 
   virtual void asyncReadUntil(const std::string& s,
-			      const IOHandler& handler)
+                  const IOHandler& handler)
   {
     boost::asio::async_read_until(socket_, responseBuf_, s, handler);
   }
@@ -419,7 +420,7 @@ protected:
   virtual void asyncRead(const IOHandler& handler)
   {
     boost::asio::async_read(socket_, responseBuf_,
-			    boost::asio::transfer_at_least(1), handler);
+                boost::asio::transfer_at_least(1), handler);
   }
 
 private:
@@ -432,8 +433,8 @@ class Client::SslImpl : public Client::Impl
 {
 public:
   SslImpl(WIOService& ioService, WServer *server,
-	  boost::asio::ssl::context& context, const std::string& sessionId,
-	  const std::string& hostName)
+      boost::asio::ssl::context& context, const std::string& sessionId,
+      const std::string& hostName)
     : Impl(ioService, server, sessionId),
       socket_(ioService_, context),
       hostName_(hostName)
@@ -446,7 +447,7 @@ protected:
   }
 
   virtual void asyncConnect(tcp::endpoint& endpoint,
-			    const ConnectHandler& handler)
+                const ConnectHandler& handler)
   {
     socket_.lowest_layer().async_connect(endpoint, handler);
   }
@@ -469,7 +470,7 @@ protected:
   }
 
   virtual void asyncReadUntil(const std::string& s,
-			      const IOHandler& handler)
+                  const IOHandler& handler)
   {
     boost::asio::async_read_until(socket_, responseBuf_, s, handler);
   }
@@ -477,7 +478,7 @@ protected:
   virtual void asyncRead(const IOHandler& handler)
   {
     boost::asio::async_read(socket_, responseBuf_,
-			    boost::asio::transfer_at_least(1), handler);
+                boost::asio::transfer_at_least(1), handler);
   }
 
 private:
@@ -535,8 +536,8 @@ bool Client::get(const std::string& url)
   return request(Get, url, Message());
 }
 
-bool Client::get(const std::string& url, 
-		 const std::vector<Message::Header> headers)
+bool Client::get(const std::string& url,
+         const std::vector<Message::Header> headers)
 {
   Message m(headers);
   return request(Get, url, m);
@@ -548,7 +549,7 @@ bool Client::post(const std::string& url, const Message& message)
 }
 
 bool Client::request(Http::Method method, const std::string& url,
-		     const Message& message)
+             const Message& message)
 {
   std::string sessionId;
 
@@ -593,16 +594,16 @@ bool Client::request(Http::Method method, const std::string& url,
 
     if (!verifyFile_.empty() || !verifyPath_.empty()) {
       if (!verifyFile_.empty())
-	context.load_verify_file(verifyFile_);
+    context.load_verify_file(verifyFile_);
       if (!verifyPath_.empty())
-	context.add_verify_path(verifyPath_);
+    context.add_verify_path(verifyPath_);
     }
 
-    impl_.reset(new SslImpl(*ioService, 
-			    server, 
-			    context, 
-			    sessionId, 
-			    parsedUrl.host));
+    impl_.reset(new SslImpl(*ioService,
+                server,
+                context,
+                sessionId,
+                parsedUrl.host));
 #endif // WT_WITH_SSL
 
   } else {
@@ -618,11 +619,11 @@ bool Client::request(Http::Method method, const std::string& url,
 
   LOG_DEBUG(methodNames_[method] << " " << url);
 
-  impl_->request(methodNames_[method], 
-		 parsedUrl.host, 
-		 parsedUrl.port, 
-		 parsedUrl.path, 
-		 message);
+  impl_->request(methodNames_[method],
+         parsedUrl.host,
+         parsedUrl.port,
+         parsedUrl.path,
+         message);
 
   return true;
 }

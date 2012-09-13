@@ -14,8 +14,11 @@
 #ifndef WT_NO_BOOST_INTRUSIVE
 #include <boost/intrusive/list.hpp>
 #endif
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
+#include <boost/signals2/connection.hpp>
 #include <boost/utility.hpp>
+
+namespace bs = boost::signals2;
 
 namespace Wt {
 
@@ -34,7 +37,7 @@ class JavaScriptEvent;
 
    To respond to user-interactivity events, or in general to communicate
    events from one widget to any other, %Wt uses a signal/slot system.
-  
+
    A slot is any method of any descendant of WObject. To connect a
    signal with a slot, the only requirement is that the method
    signature of the slot must be compatible with the signal
@@ -45,16 +48,16 @@ class JavaScriptEvent;
    these functions can be used as slots, or, if you have done extra
    work to optimize the implementation of these methods as client-side
    JavaScript code (see below).
-  
+
    A signal may be created by adding a \link Signal Signal<X,
    ...>\endlink object to your class. You may specify up to 6
    arguments which may be of arbitrary types that are <i>Copyable</i>,
    that may be passed through the signal to connected slots.
-  
+
    The library defines several user-event signals on various widgets,
    and it is easy and convenient to add signals and slots to widget
    classes to communicate events and trigger callbacks.
-  
+
    Event signals (\link EventSignal EventSignal<E>\endlink)
    are signals that may be triggered internally by the library to
    respond to user interactivity events.  The abstract base classes
@@ -104,8 +107,8 @@ public:
    * Every signal can be connected to a slot which does not take any
    * arguments (and may thus ignore signal arguments).
    */
-  virtual boost::signals::connection connect(WObject *target,
-					     WObject::Method method) = 0;
+  virtual bs::connection connect(WObject *target,
+                         WObject::Method method) = 0;
 
   /*! \brief Connects to a slot.
    *
@@ -113,7 +116,7 @@ public:
    * arguments (and may thus ignore signal arguments).
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
 protected:
   SignalBase(WObject *sender)
@@ -129,7 +132,7 @@ private:
   WObject *sender_;
   bool     blocked_;
 
-  static WObject *currentSender();  
+  static WObject *currentSender();
 
   friend class WObject;
 };
@@ -220,8 +223,8 @@ private:
  * \ingroup signalslot
  */
 template <typename A1 = NoClass, typename A2 = NoClass,
-	  typename A3 = NoClass, typename A4 = NoClass,
-	  typename A5 = NoClass, typename A6 = NoClass>
+      typename A3 = NoClass, typename A4 = NoClass,
+      typename A5 = NoClass, typename A6 = NoClass>
 class Signal : public SignalBase
 {
 public:
@@ -240,8 +243,8 @@ public:
    */
   ~Signal();
 
-  virtual boost::signals::connection connect(WObject *target,
-					     WObject::Method method);
+  virtual bs::connection connect(WObject *target,
+                         WObject::Method method);
 
   /*! \brief Connects to a function.
    *
@@ -250,16 +253,16 @@ public:
    *
    * When the receiver function is an object method, the signal will
    * automatically be disconnected when the object is deleted, as long as the
-   * object inherits from WObject or boost::signals::trackable.
+   * object inherits from WObject or bs::trackable.
    *
    * The function may leave up to <i>N</i> parameters unbound
    * (e.g. using boost::bind placeholders _1 to _N) that may be bound
    * to values passed by the signal.
    */
 #ifndef WT_CNOR
-  template <class F> boost::signals::connection connect(const F& function);
+  template <class F> bs::connection connect(const F& function);
 #else
-  boost::signals::connection connect(const boost::bound& f);
+  bs::connection connect(const boost::bound& f);
 #endif
 
   /*! \brief Connects a slot that takes no arguments.
@@ -280,7 +283,7 @@ public:
    * but this is not enforced by the interface.
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
   /*! \brief Connects a slot that takes one argument.
    *
@@ -289,10 +292,10 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(A1));
+    bs::connection connect(T *target, void (V::*method)(A1));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&));
+    bs::connection connect(T *target, void (V::*method)(const A1&));
 
   /*! \brief Connects a slot that takes two arguments.
    *
@@ -301,19 +304,19 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(A1, A2));
+    bs::connection connect(T *target, void (V::*method)(A1, A2));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&,
-								    A2));
+    bs::connection connect(T *target, void (V::*method)(const A1&,
+                                    A2));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(A1,
-								    const A2&));
+    bs::connection connect(T *target, void (V::*method)(A1,
+                                    const A2&));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&,
-								    const A2&));
+    bs::connection connect(T *target, void (V::*method)(const A1&,
+                                    const A2&));
 
   /*! \brief Connects a slot that takes three arguments.
    *
@@ -322,22 +325,22 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&,
-								    A2,A3));
+    bs::connection connect(T *target, void (V::*method)(const A1&,
+                                    A2,A3));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&,
-								    const A2&,
-								    A3));
+    bs::connection connect(T *target, void (V::*method)(const A1&,
+                                    const A2&,
+                                    A3));
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const A1&,
-								    const A2&,
-								    const A3&));
+    bs::connection connect(T *target, void (V::*method)(const A1&,
+                                    const A2&,
+                                    const A3&));
 
   /*! \brief Connects a slot that takes four arguments.
    *
@@ -346,8 +349,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4));
 
   /*! \brief Connects a slot that takes five arguments.
    *
@@ -356,8 +359,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4,A5));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4,A5));
 
   /*! \brief Connects a slot that takes six arguments.
    *
@@ -366,8 +369,8 @@ public:
    * \sa connect(T *target, void (V::*method)())
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target,
-				       void (V::*method)(A1,A2,A3,A4,A5,A6));
+    bs::connection connect(T *target,
+                       void (V::*method)(A1,A2,A3,A4,A5,A6));
 
   /*! \brief Emits the signal.
    *
@@ -378,8 +381,8 @@ public:
    * arguments.
    */
   void emit(A1 a1 = NoClass::none, A2 a2 = NoClass::none,
-	    A3 a3 = NoClass::none, A4 a4 = NoClass::none,
-	    A5 a5 = NoClass::none, A6 a6 = NoClass::none) const;
+        A3 a3 = NoClass::none, A4 a4 = NoClass::none,
+        A5 a5 = NoClass::none, A6 a6 = NoClass::none) const;
 
   /*! \brief Emits the signal.
    *
@@ -388,15 +391,16 @@ public:
    * \sa emit
    */
   void operator()(A1 a1 = NoClass::none, A2 a2 = NoClass::none,
-		  A3 a3 = NoClass::none, A4 a4 = NoClass::none,
-		  A5 a5 = NoClass::none, A6 a6 = NoClass::none) const;
+          A3 a3 = NoClass::none, A4 a4 = NoClass::none,
+          A5 a5 = NoClass::none, A6 a6 = NoClass::none) const;
 
   virtual bool isConnected() const;
 
 private:
   Signal(const Signal<A1, A2, A3, A4, A5, A6>&);
 
-  boost::signal6<void, A1, A2, A3, A4, A5, A6> *impl_;
+  //boost::signal6<void, A1, A2, A3, A4, A5, A6> *impl_;
+  boost::signals2::signal< void (A1, A2, A3, A4, A5, A6) > * impl_;
 };
 
 #ifndef WT_CNOR
@@ -406,7 +410,7 @@ private:
  */
 template<>
 class WT_API Signal<void> : public Signal<>
-{ 
+{
 public:
   Signal<void, NoClass, NoClass, NoClass, NoClass, NoClass>
     (WObject *sender = 0);
@@ -422,7 +426,7 @@ public:
   void emit() const;
 
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 };
 
 #endif // WT_CNOR
@@ -436,7 +440,7 @@ public:
  */
 class WT_API EventSignalBase : public SignalBase
 #if !(defined(WT_TARGET_JAVA) || defined(WT_NO_BOOST_INTRUSIVE))
-			     ,public boost::intrusive::list_base_hook<>
+                 ,public boost::intrusive::list_base_hook<>
 #endif
 {
 public:
@@ -456,7 +460,7 @@ public:
   const std::string javaScript() const;
   bool isExposedSignal() const;
   void setNotExposed();
-  void disconnect(boost::signals::connection& conn);
+  void disconnect(bs::connection& conn);
 
   /*! \brief Prevents the default browser action.
    *
@@ -489,18 +493,18 @@ public:
   bool propagationPrevented() const;
 
   const std::string createUserEventCall(const std::string& jsObject,
-					const std::string& jsEvent,
-					const std::string& eventName,
-					const std::string& arg1,
-					const std::string& arg2,
-					const std::string& arg3,
-					const std::string& arg4,
-					const std::string& arg5,
-					const std::string& arg6) const;
+                    const std::string& jsEvent,
+                    const std::string& eventName,
+                    const std::string& arg1,
+                    const std::string& arg2,
+                    const std::string& arg3,
+                    const std::string& arg4,
+                    const std::string& arg5,
+                    const std::string& arg6) const;
 
-  boost::signals::connection connectStateless(WObject::Method method, 
-					      WObject *target,
-					      WStatelessSlot *slot);
+  bs::connection connectStateless(WObject::Method method,
+                          WObject *target,
+                          WStatelessSlot *slot);
   using SignalBase::connect;
   void connect(JSlot& slot);
   void connect(const std::string& function);
@@ -509,14 +513,14 @@ public:
 
 protected:
   struct StatelessConnection {
-    boost::signals::connection connection;
+    bs::connection connection;
     WObject                   *target;
     WStatelessSlot            *slot;
 
     bool ok() const;
 
-    StatelessConnection(const boost::signals::connection& c,
-			WObject *target, WStatelessSlot *slot);
+    StatelessConnection(const bs::connection& c,
+            WObject *target, WStatelessSlot *slot);
   };
 
   static const int BIT_NEED_UPDATE = 0;
@@ -537,7 +541,8 @@ protected:
    * Dummy signal used for knowing if stateless connections are still
    * connected.
    */
-  boost::signal0<void>              dummy_;
+  //boost::signal0<void>              dummy_;
+  boost::signals2::signal<void ()> dummy_;
 
   EventSignalBase(const char *name, WObject *sender);
 
@@ -614,16 +619,16 @@ public:
    *
    * When the receiver function is an object method, the signal will
    * automatically be disconnected when the object is deleted, as long as the
-   * object inherits from WObject or boost::signals::trackable.
+   * object inherits from WObject or bs::trackable.
    *
    * The function may leave 1 parameters unbound (e.g. using
    * boost::bind placeholders _1) that may be bound to the event
    * detail object passed by the signal.
    */
 #ifndef WT_CNOR
-  template <class F> boost::signals::connection connect(const F& function);
+  template <class F> bs::connection connect(const F& function);
 #else
-  boost::signals::connection connect(const boost::bound& function);
+  bs::connection connect(const boost::bound& function);
 #endif
 
   /*! \brief Connects a slot that takes no arguments.
@@ -644,21 +649,21 @@ public:
    * \endcode
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
   /*! \brief Connects a slot that takes one argument.
    *
    * This is only possible for signals that take at least one argument.
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(E));
+    bs::connection connect(T *target, void (V::*method)(E));
 
   /*! \brief Connects a slot that takes a 'const argument&'.
    *
    * This is only possible for signals that take at least one argument.
    */
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)(const E&));
+    bs::connection connect(T *target, void (V::*method)(const E&));
 
   /*! \brief Connects a JavaScript function.
    *
@@ -710,11 +715,12 @@ public:
    */
   void operator()(E e) const;
 
-  virtual boost::signals::connection connect(WObject *target,
-					     WObject::Method method);
+  virtual bs::connection connect(WObject *target,
+                         WObject::Method method);
 
 private:
-  typedef boost::signal1<void, E> BoostSignalType;
+  //typedef boost::signal1<void, E> BoostSignalType;
+  typedef boost::signals2::signal<void(E)> BoostSignalType;
   BoostSignalType dynamic_;
 
   void processDynamic(const JavaScriptEvent& e);
@@ -730,11 +736,11 @@ public:
 
   virtual bool isConnected() const;
 
-  boost::signals::connection connect(const boost::bound& f);
+  bs::connection connect(const boost::bound& f);
   void connect(const std::string& function);
   void connect(JSlot& slot);
   template<class T, class V>
-    boost::signals::connection connect(T *target, void (V::*method)());
+    bs::connection connect(T *target, void (V::*method)());
 
   void emit() const;
   void operator()() const;
@@ -745,8 +751,8 @@ public:
 #ifndef WT_CNOR
 
 template <class T, class V>
-boost::signals::connection SignalBase::connect(T *target,
-					       void (V::*method)())
+bs::connection SignalBase::connect(T *target,
+                           void (V::*method)())
 {
   WObject *o = dynamic_cast<WObject *>(dynamic_cast<V *>(target));
   assert(o);
@@ -754,34 +760,35 @@ boost::signals::connection SignalBase::connect(T *target,
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 Signal<A1, A2, A3, A4, A5, A6>::Signal(WObject *sender)
   : SignalBase(sender),
     impl_(0)
 { }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 Signal<A1, A2, A3, A4, A5, A6>::~Signal()
-{  
+{
   delete impl_;
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class F>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(const F& function)
 {
   if (!impl_)
-    impl_ = new boost::signal6<void, A1, A2, A3, A4, A5, A6>;
-  return impl_->connect(function, boost::signals::at_front);
+    impl_ = new boost::signals2::signal<void(A1, A2, A3, A4, A5, A6)>;
+    //impl_ = new boost::signal6<void, A1, A2, A3, A4, A5, A6>;
+  return impl_->connect(function, bs::at_front);
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4, A5, A6))
 {
   assert(dynamic_cast<V *>(target));
@@ -789,9 +796,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4, A5))
 {
   assert(dynamic_cast<V *>(target));
@@ -799,9 +806,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3, A4))
 {
   assert(dynamic_cast<V *>(target));
@@ -809,9 +816,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&, const A2&, const A3&))
 {
   assert(dynamic_cast<V *>(target));
@@ -819,9 +826,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&, const A2&, A3))
 {
   assert(dynamic_cast<V *>(target));
@@ -829,9 +836,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&, A2, A3))
 {
   assert(dynamic_cast<V *>(target));
@@ -839,9 +846,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2, A3))
 {
   assert(dynamic_cast<V *>(target));
@@ -849,9 +856,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&, const A2&))
 {
   assert(dynamic_cast<V *>(target));
@@ -859,9 +866,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&, A2))
 {
   assert(dynamic_cast<V *>(target));
@@ -870,9 +877,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, const A2&))
 {
   assert(dynamic_cast<V *>(target));
@@ -880,9 +887,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1, A2))
 {
   assert(dynamic_cast<V *>(target));
@@ -890,9 +897,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(const A1&))
 {
   assert(dynamic_cast<V *>(target));
@@ -900,9 +907,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)(A1))
 {
   assert(dynamic_cast<V *>(target));
@@ -910,9 +917,9 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 template <class T, class V>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(T *target, void (V::*method)())
 {
   assert(dynamic_cast<V *>(target));
@@ -920,17 +927,17 @@ boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
-boost::signals::connection Signal<A1, A2, A3, A4, A5, A6>
+      typename A4, typename A5, typename A6>
+bs::connection Signal<A1, A2, A3, A4, A5, A6>
 ::connect(WObject *target, WObject::Method method)
 {
   return connect(boost::bind(method, target));
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void Signal<A1, A2, A3, A4, A5, A6>::emit(A1 a1, A2 a2, A3 a3,
-					  A4 a4, A5 a5, A6 a6) const
+                      A4 a4, A5 a5, A6 a6) const
 {
   if (impl_ && !isBlocked()) {
     pushSender(sender());
@@ -940,15 +947,15 @@ void Signal<A1, A2, A3, A4, A5, A6>::emit(A1 a1, A2 a2, A3 a3,
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 void Signal<A1, A2, A3, A4, A5, A6>::operator()(A1 a1, A2 a2, A3 a3,
-						A4 a4, A5 a5, A6 a6) const
+                        A4 a4, A5 a5, A6 a6) const
 {
   emit(a1, a2, a3, a4, a5, a6);
 }
 
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
 bool Signal<A1, A2, A3, A4, A5, A6>::isConnected() const
 {
   return impl_ ? impl_->num_slots() > 0 : false;
@@ -982,16 +989,16 @@ bool EventSignal<E>::isConnected() const
 
 template <typename E>
 template <class F>
-boost::signals::connection EventSignal<E>::connect(const F& function)
+bs::connection EventSignal<E>::connect(const F& function)
 {
   exposeSignal();
-  return dynamic_.connect(function, boost::signals::at_front);
+  return dynamic_.connect(function, bs::at_front);
 }
 
 template <typename E>
 template <class T, class V>
-boost::signals::connection EventSignal<E>::connect(T *target,
-						   void (V::*method)())
+bs::connection EventSignal<E>::connect(T *target,
+                           void (V::*method)())
 {
   exposeSignal();
   WObject *o = dynamic_cast<WObject *>(dynamic_cast<V *>(target));
@@ -1004,31 +1011,31 @@ boost::signals::connection EventSignal<E>::connect(T *target,
       (static_cast<WObject::Method>(method), o, s);
   else
     return dynamic_.connect(boost::bind(method, target),
-			    boost::signals::at_front);
+                bs::at_front);
 }
 
 template <typename E>
 template <class T, class V>
-boost::signals::connection EventSignal<E>::connect(T *target,
-						   void (V::*method)(E))
+bs::connection EventSignal<E>::connect(T *target,
+                           void (V::*method)(E))
 {
   exposeSignal();
   assert(dynamic_cast<V *>(target));
 
   return dynamic_.connect(boost::bind(method, target, ::_1),
-			  boost::signals::at_front);
+              bs::at_front);
 }
 
 template <typename E>
 template <class T, class V>
-boost::signals::connection EventSignal<E>::connect(T *target,
-						   void (V::*method)(const E&))
+bs::connection EventSignal<E>::connect(T *target,
+                           void (V::*method)(const E&))
 {
   exposeSignal();
   assert(dynamic_cast<V *>(target));
 
   return dynamic_.connect(boost::bind(method, target, ::_1),
-			  boost::signals::at_front);
+              bs::at_front);
 }
 
 template <typename E>
@@ -1050,7 +1057,7 @@ void EventSignal<E>::connect(JSlot& slot)
 }
 
 template <typename E>
-boost::signals::connection
+bs::connection
 EventSignal<E>::connect(WObject *target, WObject::Method method)
 {
   exposeSignal();
@@ -1059,7 +1066,7 @@ EventSignal<E>::connect(WObject *target, WObject::Method method)
     return EventSignalBase::connectStateless(method, target, s);
   else
     return dynamic_.connect(boost::bind(method, target),
-			    boost::signals::at_front);
+                bs::at_front);
 }
 
 template <typename E>

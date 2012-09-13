@@ -570,7 +570,7 @@ private:
 
   void select(int index, bool changePath);
 
-  boost::signals::connection contentsStackConnection_;
+  bs::connection contentsStackConnection_;
   void contentsDestroyed();
   void handleInternalPathChange(const std::string& path);
 

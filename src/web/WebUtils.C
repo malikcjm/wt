@@ -12,6 +12,7 @@
 #include "Wt/Utils"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/scoped_array.hpp>
 
 #include <ctype.h>
 #include <stdio.h>
@@ -111,10 +112,10 @@ std::string eraseWord(const std::string& s, const std::string& w)
     ss.erase(ss.begin() + p, ss.begin() + p + w.length());
     if (p > 1) {
       if (ss[p-1] == ' ')
-	ss.erase(ss.begin() + (p - 1));
+    ss.erase(ss.begin() + (p - 1));
     } else
       if (p < ss.length() && ss[p] == ' ')
-	ss.erase(ss.begin() + p);
+    ss.erase(ss.begin() + p);
   }
 
   return ss;
@@ -295,18 +296,18 @@ std::string urlEncode(const std::string& url, const std::string& allowed)
 }
 
 std::string dataUrlDecode(const std::string& url,
-			  std::vector<unsigned char> &data)
+              std::vector<unsigned char> &data)
 {
   return std::string();
 }
 
 void split(SplitSet& tokens, const std::string &in, const char *sep,
-	   bool compress_adjacent_tokens)
+       bool compress_adjacent_tokens)
 {
     boost::split(tokens, in, boost::is_any_of(sep),
-		 compress_adjacent_tokens?
-		 boost::algorithm::token_compress_on:
-		 boost::algorithm::token_compress_off);
+         compress_adjacent_tokens?
+         boost::algorithm::token_compress_on:
+         boost::algorithm::token_compress_off);
 }
 
 std::string EncodeHttpHeaderField(const std::string &fieldname,
@@ -316,17 +317,17 @@ std::string EncodeHttpHeaderField(const std::string &fieldname,
   return fieldname + "*=UTF-8''" + urlEncode(fieldValue.toUTF8());
 }
 
-std::string readFile(const std::string& fname) 
+std::string readFile(const std::string& fname)
 {
   std::ifstream f(fname.c_str(), std::ios::in | std::ios::binary);
-  
+
   if (!f)
     throw WException("Could not load " + fname);
-  
+
   f.seekg(0, std::ios::end);
   int length = f.tellg();
   f.seekg(0, std::ios::beg);
-  
+
   boost::scoped_array<char> ftext(new char[length + 1]);
   f.read(ftext.get(), length);
   ftext[length] = 0;
@@ -360,6 +361,6 @@ std::string splitEntryToString(SplitEntry se)
   return se;
 #endif
 }
-  
+
   }
 }

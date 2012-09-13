@@ -211,7 +211,7 @@ private:
   bool selectionChanged_;
   bool currentlyConnected_;
 
-  std::vector<boost::signals::connection> modelConnections_;
+  std::vector<bs::connection> modelConnections_;
 
   Signal<int>     activated_;
   Signal<WString> sactivated_;

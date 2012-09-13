@@ -874,7 +874,7 @@ protected:
 
   WContainerWidget *impl_;
   RenderState renderState_;
-  std::vector<boost::signals::connection> modelConnections_;
+  std::vector<bs::connection> modelConnections_;
 
   WSignalMapper<WModelIndex, WMouseEvent> *clickedMapper_;
 

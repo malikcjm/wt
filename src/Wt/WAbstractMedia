@@ -219,7 +219,7 @@ private:
     void resourceChanged();
 
     WAbstractMedia *parent;
-    boost::signals::connection connection;
+    bs::connection connection;
     std::string type, media;
     WLink link;
   };

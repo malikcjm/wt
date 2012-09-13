@@ -10,6 +10,8 @@
 #include "WebController.h"
 #include "WebSession.h"
 
+namespace bs = boost::signals2;
+
 namespace Wt {
 
 WSocketNotifier::WSocketNotifier(int socket, Type type, WObject *parent)
@@ -36,11 +38,11 @@ void WSocketNotifier::setEnabled(bool enabled)
 
     if (!beingNotified_) {
       WebController *controller
-	= WApplication::instance()->session()->controller();
+    = WApplication::instance()->session()->controller();
       if (enabled_)
         controller->addSocketNotifier(this);
       else
-	controller->removeSocketNotifier(this);
+    controller->removeSocketNotifier(this);
     }
   }
 }
@@ -57,7 +59,7 @@ void WSocketNotifier::notify()
    * use this connection to know if the notifier was killed while
    * processing the notification
    */
-  boost::signals::connection alive
+  bs::connection alive
     = activated_.connect(this, &WSocketNotifier::dummy);
 
   activated_.emit(socket_);

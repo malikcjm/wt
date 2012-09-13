@@ -153,8 +153,8 @@ private:
   WLineEdit        *edit_;
   WPushButton      *save_;
   WPushButton      *cancel_;
-  boost::signals::connection c1_;
-  boost::signals::connection c2_;
+  bs::connection c1_;
+  bs::connection c2_;
   bool              empty_;
 };
 

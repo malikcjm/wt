@@ -321,7 +321,7 @@ private:
   Signal<WPopupMenuItem *> triggered_;
   JSignal<> cancel_;
 
-  boost::signals::connection globalClickConnection_, globalEscapeConnection_;
+  bs::connection globalClickConnection_, globalEscapeConnection_;
   bool                       recursiveEventLoop_;
   int                        autoHideDelay_;
 

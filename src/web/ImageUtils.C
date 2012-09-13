@@ -14,10 +14,10 @@
 
 namespace {
   const int mimeTypeCount = 10;
-  const char *imageMimeTypes [] = { 
-    "image/png", 
-    "image/jpeg", 
-    "image/gif", 
+  const char *imageMimeTypes [] = {
+    "image/png",
+    "image/jpeg",
+    "image/gif",
     "image/gif",
     "image/bmp",
     "image/bmp",
@@ -26,10 +26,10 @@ namespace {
     "image/bmp",
     "image/bmp"
   };
-  const char *imageHeaders [] = { 
-    "\211PNG\r\n\032\n", 
+  const char *imageHeaders [] = {
+    "\211PNG\r\n\032\n",
     "\377\330\377",
-    "GIF87a", 
+    "GIF87a",
     "GIF89a",
     "BA",
     "BM",
@@ -58,18 +58,18 @@ namespace Wt {
     {
       std::vector<unsigned char> header = FileUtils::fileHeader(fileName, 25);
       if (header.size() == 0)
-	return "";
+    return "";
       return identifyImageMimeType(header);
     }
-    
+
     std::string identifyImageMimeType(const std::vector<unsigned char>& header)
     {
       //TODO also check the filename extension, if parsing the file did not work
 
       for (int i = 0; i < mimeTypeCount; ++i) {
-	if (std::memcmp(header.data(), 
-			imageHeaders[i], imageHeaderSize[i]) == 0)
-	  return std::string(imageMimeTypes[i]);
+    if (std::memcmp(&header[0],
+            imageHeaders[i], imageHeaderSize[i]) == 0)
+      return std::string(imageMimeTypes[i]);
       }
 
       return std::string();

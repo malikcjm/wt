@@ -11,6 +11,8 @@
 
 #include <string>
 
+#include <boost/scoped_array.hpp>
+
 namespace Wt {
 
 LOGGER("Render.WTextRenderer");
@@ -88,31 +90,31 @@ double WTextRenderer::render(const WString& text, double y)
       currentPs.minX = minX;
       currentPs.maxX = maxX;
 
-      collapseMarginBottom 
-	= docBlock.layoutBlock(currentPs,
-			       false, *this, std::numeric_limits<double>::max(),
-			       collapseMarginBottom);
+      collapseMarginBottom
+    = docBlock.layoutBlock(currentPs,
+                   false, *this, std::numeric_limits<double>::max(),
+                   collapseMarginBottom);
 
       if (currentPs.maxX > maxX) {
-	if (!tooWide) {
-	  LOG_WARN("contents too wide for page.");
-	  tooWide = true;
-	}
+    if (!tooWide) {
+      LOG_WARN("contents too wide for page.");
+      tooWide = true;
+    }
 
-	maxX = currentPs.maxX;
+    maxX = currentPs.maxX;
       } else {
-	Block::clearFloats(currentPs, 
-			   maxX - minX);
+    Block::clearFloats(currentPs,
+               maxX - minX);
 
-	break;
+    break;
       }
     }
 
     for (int page = 0; page <= currentPs.page; ++page) {
       if (page != 0) {
-	device_ = startPage(page);
-	painter_ = getPainter(device_);
-	painter_->setFont(defaultFont);
+    device_ = startPage(page);
+    painter_ = getPainter(device_);
+    painter_->setFont(defaultFont);
       }
 
       docBlock.render(*this, page);

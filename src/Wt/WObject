@@ -11,10 +11,13 @@
 #include <Wt/WGlobal>
 #include <Wt/Http/Request>
 
-#include <boost/signals/trackable.hpp>
+#include <boost/signals2/trackable.hpp>
+
 #include <cassert>
 #include <vector>
 #include <map>
+
+namespace bs = boost::signals2;
 
 namespace Wt {
 
@@ -30,7 +33,7 @@ struct WT_API NoClass
 
 #ifndef WT_CNOR
 template <typename A1, typename A2, typename A3,
-	  typename A4, typename A5, typename A6>
+      typename A4, typename A5, typename A6>
   class Signal;
 #endif // WT_CNOR
 
@@ -98,7 +101,7 @@ class WStatelessSlot;
  *
  * \ingroup signalslot
  */
-class WT_API WObject : public boost::signals::trackable
+class WT_API WObject : public bs::trackable
 {
 public:
   /*! \brief Typedef for a %WObject method without arguments.
@@ -106,7 +109,7 @@ public:
   typedef void (WObject::*Method)();
 
   /*! \brief Create a %WObject with a given parent object.
-   * 
+   *
    * If the optional parent is specified, the parent object will
    * destroy all child objects. Set parent to \c 0 to create an object
    * with no parent.
@@ -121,7 +124,7 @@ public:
    * - deletes all child objects
    * - invalidates this object as sender or receiver in signals and slots
    */
-  virtual ~WObject();  
+  virtual ~WObject();
 
   /*
    * Unique id's
@@ -172,7 +175,7 @@ public:
    * Clears the stateless implementation for all slots declared to be
    * implemented with a stateless implementation.
    *
-   * \sa resetLearnedSlot(), implementStateless() 
+   * \sa resetLearnedSlot(), implementStateless()
    */
   void resetLearnedSlots();
 
@@ -190,7 +193,7 @@ public:
    */
   template <class T>
     void resetLearnedSlot(void (T::*method)());
-   
+
   /*! \brief Declares a slot to be stateless and learn client-side behaviour
    *         on first invocation.
    *
@@ -212,7 +215,7 @@ public:
    * resetLearnedSlot() or resetLearnedSlots() to flush the existing cached
    * visual effect, forcing the library to relearn it.
    *
-   * It is crucial that this function be applied first to a slot that is 
+   * It is crucial that this function be applied first to a slot that is
    * intended to be stateless before any %EventSignal connects to that slot.
    * Otherwise, the connecting %EventSignal cannot find the stateless
    * slot implementation for the intended slot, and the statement will have
@@ -238,14 +241,14 @@ public:
    *
    * To learn the visual effect, the library will simulate the event and
    * record the visual effect. To restore the application state, it will
-   * call the undoMethod which must restore the effect of method. 
+   * call the undoMethod which must restore the effect of method.
    *
    * \sa \link implementStateless() implementStateless(void (T::*method)())\endlink
    */
 #ifndef WT_TARGET_JAVA
   template <class T>
     WStatelessSlot *implementStateless(void (T::*method)(),
-				       void (T::*undoMethod)());
+                       void (T::*undoMethod)());
 #else // WT_TARGET_JAVA
   template <class T1, class T2>
     WStatelessSlot *implementStateless(T1 method, T2 undoMethod);
@@ -267,7 +270,7 @@ public:
    */
   template <class T>
     WStatelessSlot *implementJavaScript(void (T::*method)(),
-					const std::string& jsCode);
+                    const std::string& jsCode);
 
   /*! \brief Adds a child object.
    *
@@ -289,7 +292,7 @@ public:
   /*! \brief Returns the children.
    */
   const std::vector<WObject *>& children() const;
- 
+
   /*! \brief Returns the parent object.
    */
   WObject *parent() const { return parent_; }
@@ -318,7 +321,7 @@ protected:
 
   struct FormData {
     FormData(const Http::ParameterValues& aValues,
-	     const std::vector<Http::UploadedFile>& aFiles)
+         const std::vector<Http::UploadedFile>& aFiles)
       : values(aValues), files(aFiles) { }
 
     const Http::ParameterValues& values;
@@ -392,17 +395,17 @@ WStatelessSlot *WObject::implementStateless(void (T::*method)())
 
 template <class T>
 WStatelessSlot *WObject::implementStateless(void (T::*method)(),
-					    void (T::*undoMethod)())
+                        void (T::*undoMethod)())
 {
   assert(dynamic_cast<T *>(this));
   return implementPrelearn(static_cast<Method>(method),
-			   static_cast<Method>(undoMethod));
+               static_cast<Method>(undoMethod));
 }
 #endif // WT_TARGET_JAVA
 
 template <class T>
 WStatelessSlot *WObject::implementJavaScript(void (T::*method)(),
-					     const std::string& jsCode)
+                         const std::string& jsCode)
 {
   assert(dynamic_cast<T *>(this));
   return implementPrelearned(static_cast<Method>(method), jsCode);

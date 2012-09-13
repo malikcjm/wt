@@ -12,6 +12,8 @@
 #include "DomElement.h"
 #include "WebUtils.h"
 
+namespace bs = boost::signals2;
+
 namespace Wt {
 
 LOGGER("WComboBox");
@@ -26,7 +28,7 @@ WComboBox::WComboBox(WContainerWidget *parent)
     currentlyConnected_(false),
     activated_(this),
     sactivated_(this)
-{ 
+{
   setInline(true);
   setFormObject(true);
 
@@ -59,31 +61,31 @@ void WComboBox::setModel(WAbstractItemModel *model)
   modelConnections_.push_back
     (model_->layoutChanged().connect(this, &WComboBox::itemsChanged));
   modelConnections_.push_back
-    (model_->rowsAboutToBeRemoved().connect(this, 
-					    &WComboBox::rowsAboutToBeRemoved));
+    (model_->rowsAboutToBeRemoved().connect(this,
+                        &WComboBox::rowsAboutToBeRemoved));
 
   /* Redraw contents of the combo box to match the contents of the new model.
    */
   refresh();
 }
 
-void WComboBox::rowsAboutToBeRemoved(const WModelIndex &index, 
-				     int from, int to)
+void WComboBox::rowsAboutToBeRemoved(const WModelIndex &index,
+                     int from, int to)
 {
   if (currentIndex_ == -1)
     return;
 
   int count = to - from + 1;
-  if (currentIndex_ > to) { 
-    currentIndex_ -= count; 
-  } else if (currentIndex_ >= from) { 
-    if (from > 0) 
-      currentIndex_ = from - 1; 
+  if (currentIndex_ > to) {
+    currentIndex_ -= count;
+  } else if (currentIndex_ >= from) {
+    if (from > 0)
+      currentIndex_ = from - 1;
     else {
       if (model_->rowCount(index) - count == 0)
-	currentIndex_ = -1;
+    currentIndex_ = -1;
       else
-	currentIndex_ = 0;
+    currentIndex_ = 0;
     }
   }
 }
@@ -181,7 +183,7 @@ void WComboBox::propagateChange()
   /*
    * use this connection to know if the widget was killed
    */
-  boost::signals::connection alive
+  bs::connection alive
     = sactivated_.connect(this, &WComboBox::dummy);
 
   activated_.emit(currentIndex_);
@@ -225,14 +227,14 @@ void WComboBox::updateDom(DomElement& element, bool all)
       DomElement *item = DomElement::createNew(DomElement_OPTION);
       item->setProperty(PropertyValue, boost::lexical_cast<std::string>(i));
       item->setProperty(PropertyInnerHTML,
-			escapeText(asString(model_->data(i, modelColumn_)))
-			.toUTF8());
+            escapeText(asString(model_->data(i, modelColumn_)))
+            .toUTF8());
       if (isSelected(i))
-	item->setProperty(PropertySelected, "true");
+    item->setProperty(PropertySelected, "true");
 
       WString sc = asString(model_->data(i, modelColumn_, StyleClassRole));
       if (!sc.empty())
-	item->setProperty(PropertyClass, sc.toUTF8());
+    item->setProperty(PropertyClass, sc.toUTF8());
 
       element.addChild(item);
     }
@@ -242,7 +244,7 @@ void WComboBox::updateDom(DomElement& element, bool all)
 
   if (selectionChanged_) {
     element.setProperty(PropertySelectedIndex,
-			boost::lexical_cast<std::string>(currentIndex_));
+            boost::lexical_cast<std::string>(currentIndex_));
     selectionChanged_ = false;
   }
 
@@ -278,9 +280,9 @@ void WComboBox::setFormData(const FormData& formData)
 
     if (!value.empty()) {
       try {
-	currentIndex_ = boost::lexical_cast<int>(value);
+    currentIndex_ = boost::lexical_cast<int>(value);
       } catch (boost::bad_lexical_cast& e) {
-	LOG_ERROR("received illegal form value: '" << value << "'");
+    LOG_ERROR("received illegal form value: '" << value << "'");
       }
     } else
       currentIndex_ = -1;
@@ -320,8 +322,8 @@ void WComboBox::itemsChanged()
 int WComboBox::findText(const WString& text, WFlags<MatchFlag> flags)
 {
   WModelIndexList list = model_->match(model_->index(0, modelColumn_),
-				       DisplayRole, boost::any(text),
-				       1, flags);
+                       DisplayRole, boost::any(text),
+                       1, flags);
 
   if (list.empty())
     return -1;

@@ -474,7 +474,7 @@ private:
   Signal<WT_USTRING> filterModel_;
   Signal<int, WFormWidget *> activated_;
 
-  std::vector<boost::signals::connection> modelConnections_;
+  std::vector<bs::connection> modelConnections_;
 
   JSignal<std::string> filter_;
   JSignal<std::string, std::string> jactivated_;

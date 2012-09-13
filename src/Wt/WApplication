@@ -87,7 +87,7 @@ typedef boost::function<WApplication* (const WEnvironment&)> ApplicationCreator;
  *
  * Each user session of your application has a corresponding
  * %WApplication instance. You need to create a new instance and return
- * it as the result of {javadoclink WtServlet#createApplication(WEnvironment)}. 
+ * it as the result of {javadoclink WtServlet#createApplication(WEnvironment)}.
  * The instance is the main entry point to session information,
  * and holds a reference to the root() of the widget tree.
  *
@@ -216,11 +216,11 @@ public:
    * The \p environment provides information on the initial request,
    * user agent, and deployment-related information.
    */
-#if defined(DOXYGEN_ONLY) || defined(WT_TARGET_JAVA) 
+#if defined(DOXYGEN_ONLY) || defined(WT_TARGET_JAVA)
   WApplication(const WEnvironment& environment);
 #else
   WApplication(const WEnvironment& environment,
-	       WtLibVersion version = WT_INCLUDED_VERSION);
+           WtLibVersion version = WT_INCLUDED_VERSION);
 #endif
 
 #ifndef WT_TARGET_JAVA
@@ -352,7 +352,7 @@ public:
    * \sa useStyleSheet()
    */
   void useStyleSheet(const std::string& url, const std::string& condition,
-		     const std::string& media = "all");
+             const std::string& media = "all");
 
   /*! \brief Sets the theme.
    *
@@ -372,7 +372,7 @@ public:
   std::string cssTheme() const { return theme_; }
 
   /*! \brief Sets the layout direction.
-   * 
+   *
    * The default direction is LeftToRight.
    *
    * This sets the language text direction, which by itself sets the
@@ -468,7 +468,7 @@ public:
    * WString::tr() is used to create localized strings, whose
    * localized translation is looked up through this object, using a
    * key.
-   * 
+   *
    * \if cpp
    * \sa WString::tr(), messageResourceBundle()
    * \elseif java
@@ -678,7 +678,7 @@ public:
    * session if available.
    *
    * \if cpp
-   * See also \ref config_session for configuring the session-tracking 
+   * See also \ref config_session for configuring the session-tracking
    * method.
    *
    * For the built-in httpd, when the application is deployed at a folder
@@ -753,7 +753,7 @@ public:
    * see \ref wthttpd ), making clean URLs impossible. Returned
    * URLs then include a <tt>"?_="</tt> encoding for the internal
    * path:
-   * 
+   *
    * \code
    * http://www.mydomain.com/stuff/?_=/project/z3cbc/details/
    * \endcode
@@ -1070,7 +1070,7 @@ public:
    *
    * \if java
    * This works only if your servlet container supports the Servlet 3.0
-   * API. If you try to invoke this function on a servlet container with 
+   * API. If you try to invoke this function on a servlet container with
    * no such support, an exception will be thrown.
    * \endif
    *
@@ -1283,7 +1283,7 @@ public:
   /*! \brief Declares an application-wide JavaScript function.
    *
    * The function is stored in WApplication::javaScriptClass().
-   * 
+   *
    * The next code snippet declares and invokes function foo:
    * \if cpp
    * \code
@@ -1296,7 +1296,7 @@ public:
    * \endif
    */
   void declareJavaScriptFunction(const std::string& name,
-				 const std::string& function);
+                 const std::string& function);
 
   /*! \brief Loads a JavaScript library.
    *
@@ -1321,7 +1321,7 @@ public:
    * needs to be done using requireJQuery().
    */
   bool require(const std::string& url,
-	       const std::string& symbol = std::string());
+           const std::string& symbol = std::string());
 
   /*! \brief Loads a custom JQuery library.
    *
@@ -1384,7 +1384,7 @@ public:
    * \sa WServer::readConfigurationProperty()
    */
   static bool readConfigurationProperty(const std::string& name,
-					std::string& value);
+                    std::string& value);
 #else
   /*! \brief Reads a configuration property.
    *
@@ -1393,7 +1393,7 @@ public:
    * is returned.
    */
   static std::string *readConfigurationProperty(const std::string& name,
-						const std::string& value);
+                        const std::string& value);
 #endif // WT_TARGET_JAVA
 
   /*! \brief Sets the Ajax communication method (<b>deprecated</b>).
@@ -1521,13 +1521,13 @@ public:
    * \sa WEnvironment::supportsCookies(), WEnvironment::getCookie()
    */
   void setCookie(const std::string& name, const std::string& value,
-		 int maxAge, const std::string& domain = "",
-		 const std::string& path = "", bool secure = false);
+         int maxAge, const std::string& domain = "",
+         const std::string& path = "", bool secure = false);
 
 #ifndef WT_TARGET_JAVA
   void setCookie(const std::string& name, const std::string& value,
-		 const WDateTime& expires, const std::string& domain = "",
-		 const std::string& path = "", bool secure = false);
+         const WDateTime& expires, const std::string& domain = "",
+         const std::string& path = "", bool secure = false);
 #endif // WT_TARGET_JAVA
 
   /*! \brief Removes a cookie.
@@ -1535,24 +1535,24 @@ public:
    * \sa setCookie()
    */
   void removeCookie(const std::string& name, const std::string& domain = "",
-		    const std::string& path = "");
-  
+            const std::string& path = "");
+
   /*! \brief Adds an HTML meta link.
-   * 
+   *
    * When a link was previously set for the same \p href, its contents
    * are replaced.
-   * When an empty string is used for the arguments \p media, \p hreflang, 
+   * When an empty string is used for the arguments \p media, \p hreflang,
    * \p type or \p sizes, they will be ignored.
    *
    * \sa removeMetaLink()
    */
   void addMetaLink(const std::string &href,
-		   const std::string &rel,
-		   const std::string &media,
-		   const std::string &hreflang,
-		   const std::string &type,
-		   const std::string &sizes,
-		   bool disabled);
+           const std::string &rel,
+           const std::string &media,
+           const std::string &hreflang,
+           const std::string &type,
+           const std::string &sizes,
+           bool disabled);
 
   /*! \brief Removes the HTML meta link.
    *
@@ -1582,7 +1582,7 @@ public:
    * returning \c false (see environment()).
    */
   void addMetaHeader(const std::string& name, const WString& content,
-		     const std::string& lang = "");
+             const std::string& lang = "");
 
   /*! \brief Adds an HTML meta header.
    *
@@ -1593,7 +1593,7 @@ public:
    * \sa removeMetaHeader()
    */
   void addMetaHeader(MetaHeaderType type, const std::string& name,
-		     const WString& content, const std::string& lang = "");
+             const WString& content, const std::string& lang = "");
 
   /*! \brief Removes one or all meta headers.
    *
@@ -1610,7 +1610,7 @@ public:
    * Starts a new log entry of the given \p type in the %Wt
    * application log file. This method returns a stream-like object to
    * which the message may be streamed.
-   * 
+   *
    * \if cpp
    * A typical usage would be:
    * \code
@@ -1744,7 +1744,7 @@ public:
    * \sa See WInteractWidget::keyPressed()
    */
   EventSignal<WKeyEvent>& globalKeyPressed();
-    
+
   /*! \brief Event signal emitted when a keyboard key is released.
    *
    * The application receives key events when no widget currently
@@ -2015,7 +2015,7 @@ private:
 
   struct MetaHeader {
     MetaHeader(MetaHeaderType type, const std::string& name,
-	       const WString& content, const std::string& lang);
+           const WString& content, const std::string& lang);
 
     MetaHeaderType type;
     std::string name, lang;
@@ -2024,12 +2024,12 @@ private:
 
   struct MetaLink {
     MetaLink(const std::string &href,
-	     const std::string &rel,
-	     const std::string &media,
-	     const std::string &hreflang,
-	     const std::string &type,
-	     const std::string &sizes,
-	     bool disabled);
+         const std::string &rel,
+         const std::string &media,
+         const std::string &hreflang,
+         const std::string &type,
+         const std::string &sizes,
+         bool disabled);
 
     std::string href;
     std::string rel;
@@ -2148,7 +2148,7 @@ private:
   void              removeExposedSignal(EventSignalBase* signal);
   EventSignalBase  *decodeExposedSignal(const std::string& signalName) const;
   EventSignalBase  *decodeExposedSignal(const std::string& objectId,
-				       const std::string& name);
+                       const std::string& name);
   SignalMap&  exposedSignals() { return exposedSignals_; }
 
   std::string resourceMapKey(WResource *resource);
@@ -2262,10 +2262,10 @@ private:
  * \sa WApplication
  */
 extern int WRun(int argc, char** argv,
-		ApplicationCreator createApplication = 0);
+        ApplicationCreator createApplication = 0);
 #else // DOXYGEN_ONLY
 extern int WTCONNECTOR_API WRun(int argc, char** argv,
-				ApplicationCreator createApplication = 0);
+                ApplicationCreator createApplication = 0);
 
 #endif // DOXYGEN_ONLY
 #endif // WT_TARGET_JAVA
@@ -2279,15 +2279,16 @@ extern int WTCONNECTOR_API WRun(int argc, char** argv,
  */
 #define wApp Wt::WApplication::instance()
 
-extern void WT_API WtEmitBindSignal(const boost::shared_ptr< boost::signal0<void> >& s);
+//extern void WT_API WtEmitBindSignal(const boost::shared_ptr< boost::signal0<void> >& s);
+extern void WT_API WtEmitBindSignal(const boost::shared_ptr< boost::signals2::signal<void()> >& s);
 
 #ifndef WT_CNOR
 template <typename F>
 boost::function<void()> Wt::WApplication::bind(const F& f)
 {
-  typedef boost::shared_ptr< boost::signal0<void> > SignalPtr;
+  typedef boost::shared_ptr< boost::signals2::signal<void()> > SignalPtr;
 
-  SignalPtr s(new boost::signal0<void>());
+  SignalPtr s(new boost::signals2::signal<void()>());
   s->connect(f);
 
   return boost::bind(&WtEmitBindSignal, s);

@@ -14,6 +14,8 @@
 #include "WebUtils.h"
 #include "WebSession.h"
 
+
+
 namespace Wt {
 
 Wt::NoClass Wt::NoClass::none;
@@ -60,7 +62,7 @@ Signal<void>::Signal(WObject *sender)
 
 EventSignalBase::EventSignalBase(const char *name, WObject *sender)
   : SignalBase(sender), name_(name), id_(nextId_++)
-{ 
+{
   if (!name_)
     flags_.set(BIT_SIGNAL_SERVER_ANYWAY);
 }
@@ -77,7 +79,7 @@ void EventSignalBase::free(void *s)
 }
 
 EventSignalBase
-::StatelessConnection::StatelessConnection(const boost::signals::connection& c,
+::StatelessConnection::StatelessConnection(const bs::connection& c,
                                            WObject *t,
                                            WStatelessSlot *s)
   : connection(c),
@@ -96,7 +98,7 @@ bool EventSignalBase::needsUpdate(bool all) const
 {
   return (!all && flags_.test(BIT_NEED_UPDATE))
     || (all &&
-	(isConnected() || defaultActionPrevented() || propagationPrevented()));
+    (isConnected() || defaultActionPrevented() || propagationPrevented()));
 }
 
 void EventSignalBase::updateOk()
@@ -127,14 +129,14 @@ const std::string EventSignalBase::encodeCmd() const
 
 const std::string
 EventSignalBase::createUserEventCall(const std::string& jsObject,
-				     const std::string& jsEvent,
-				     const std::string& eventName,
-				     const std::string& arg1,
-				     const std::string& arg2,
-				     const std::string& arg3,
-				     const std::string& arg4,
-				     const std::string& arg5,
-				     const std::string& arg6) const
+                     const std::string& jsEvent,
+                     const std::string& eventName,
+                     const std::string& arg1,
+                     const std::string& arg2,
+                     const std::string& arg3,
+                     const std::string& arg4,
+                     const std::string& arg5,
+                     const std::string& arg6) const
 {
   if (!this->isExposedSignal())
     const_cast<EventSignalBase*>(this)->exposeSignal();
@@ -150,30 +152,30 @@ EventSignalBase::createUserEventCall(const std::string& jsObject,
     senderId = senderId.substr(0, senderId.length() - eventName.length() - 1);
 
     result << app->javaScriptClass() << ".emit('"
-	   << senderId;
+       << senderId;
 
     if (!jsObject.empty())
       result << "', { name:'" << eventName << "', eventObject:" << jsObject
-	     << ", event:" << jsEvent << "}";
+         << ", event:" << jsEvent << "}";
     else
       result << "','" << eventName << "'";
 
     if (!arg1.empty()) {
       result << "," << arg1;
       if (!arg2.empty()) {
-	result << "," << arg2;
-	if (!arg3.empty()) {
-	  result << "," << arg3;
-	  if (!arg4.empty()) {
-	    result << "," << arg4;
-	    if (!arg5.empty()) {
-	      result << "," << arg5;
-	      if (!arg6.empty()) {
-		result << "," << arg6;
-	      }
-	    }
-	  }
-	}
+    result << "," << arg2;
+    if (!arg3.empty()) {
+      result << "," << arg3;
+      if (!arg4.empty()) {
+        result << "," << arg4;
+        if (!arg5.empty()) {
+          result << "," << arg5;
+          if (!arg6.empty()) {
+        result << "," << arg6;
+          }
+        }
+      }
+    }
       }
     }
 
@@ -190,7 +192,7 @@ const std::string EventSignalBase::javaScript() const
   for (unsigned i = 0; i < connections_.size(); ++i) {
     if (connections_[i].ok()) {
       if (connections_[i].slot->learned())
-	result += connections_[i].slot->javaScript();
+    result += connections_[i].slot->javaScript();
     }
   }
 
@@ -213,7 +215,7 @@ void EventSignalBase::setNotExposed()
   flags_.reset(BIT_SIGNAL_SERVER_ANYWAY);
 }
 
-void EventSignalBase::disconnect(boost::signals::connection& conn)
+void EventSignalBase::disconnect(bs::connection& conn)
 {
   conn.disconnect();
 
@@ -277,17 +279,17 @@ EventSignalBase::~EventSignalBase()
   for (unsigned i = 0; i < connections_.size(); ++i) {
     if (connections_[i].ok())
       if (!connections_[i].slot->removeConnection(this))
-	delete connections_[i].slot;
+    delete connections_[i].slot;
   }
 }
 
 #ifndef WT_CNOR
-boost::signals::connection
+bs::connection
 EventSignalBase::connectStateless(WObject::Method method,
-				  WObject *target,
-				  WStatelessSlot *slot)
+                  WObject *target,
+                  WStatelessSlot *slot)
 {
-  boost::signals::connection c = dummy_.connect(boost::bind(method, target));
+  bs::connection c = dummy_.connect(boost::bind(method, target));
   slot->addConnection(this);
   connections_.push_back(StatelessConnection(c, target, slot));
 
@@ -302,7 +304,7 @@ void EventSignalBase::connect(JSlot& slot)
   WStatelessSlot *s = slot.slotimp();
 
   if (s->addConnection(this)) {
-    boost::signals::connection c;
+    bs::connection c;
     connections_.push_back(StatelessConnection(c, 0, s));
 
     senderRepaint();
@@ -311,10 +313,10 @@ void EventSignalBase::connect(JSlot& slot)
 
 void EventSignalBase::connect(const std::string& javaScript)
 {
-  boost::signals::connection c;
+  bs::connection c;
   connections_.push_back
     (StatelessConnection(c, 0,
-			 new WStatelessSlot("(" + javaScript  + ")(o,e);")));
+             new WStatelessSlot("(" + javaScript  + ")(o,e);")));
 
   senderRepaint();
 }
@@ -327,7 +329,7 @@ bool EventSignalBase::isConnected() const
   if (!result) {
     for (unsigned i = 0; i < connections_.size(); ++i) {
       if (connections_[i].target == 0)
-	return true;
+    return true;
     }
   }
 
@@ -403,8 +405,8 @@ void EventSignalBase::processPreLearnStateless(SlotLearnerInterface *learner)
     StatelessConnection& c = copy[i];
 
     if (c.ok()
-	&& !c.slot->learned()
-	&& c.slot->type() == WStatelessSlot::PreLearnStateless) {
+    && !c.slot->learned()
+    && c.slot->type() == WStatelessSlot::PreLearnStateless) {
       learner->learn(c.slot);
     }
   }
@@ -420,8 +422,8 @@ void EventSignalBase::processAutoLearnStateless(SlotLearnerInterface *learner)
     StatelessConnection& c = copy[i];
 
     if (c.ok()
-	&& !c.slot->learned()
-	&& c.slot->type() == WStatelessSlot::AutoLearnStateless) {
+    && !c.slot->learned()
+    && c.slot->type() == WStatelessSlot::AutoLearnStateless) {
       learner->learn(c.slot);
       changed = true;
     }

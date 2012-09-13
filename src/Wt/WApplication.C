@@ -44,30 +44,30 @@ const WtLibVersion WT_INCLUDED_VERSION = WtLibVersion();
 const char *WApplication::RESOURCES_URL = "resourcesURL";
 
 WApplication::ScriptLibrary::ScriptLibrary(const std::string& anUri,
-					   const std::string& aSymbol)
+                       const std::string& aSymbol)
   : uri(anUri), symbol(aSymbol)
 { }
 
 WApplication::StyleSheet::StyleSheet(const std::string& anUri,
-				     const std::string& aMedia)
+                     const std::string& aMedia)
   : uri(anUri), media(aMedia)
 { }
 
 WApplication::MetaHeader::MetaHeader(MetaHeaderType aType,
-				     const std::string& aName,
-				     const WString& aContent,
-				     const std::string& aLang)
+                     const std::string& aName,
+                     const WString& aContent,
+                     const std::string& aLang)
   : type(aType), name(aName), lang(aLang), content(aContent)
 { }
 
 WApplication::MetaLink::MetaLink(const std::string &aHref,
-				 const std::string &aRel,
-				 const std::string &aMedia,
-				 const std::string &aHreflang,
-				 const std::string &aType,
-				 const std::string &aSizes,
-				 bool aDisabled)
-  : href(aHref), rel(aRel), media(aMedia), hreflang(aHreflang), type(aType), 
+                 const std::string &aRel,
+                 const std::string &aMedia,
+                 const std::string &aHreflang,
+                 const std::string &aType,
+                 const std::string &aSizes,
+                 bool aDisabled)
+  : href(aHref), rel(aRel), media(aMedia), hreflang(aHreflang), type(aType),
     sizes(aSizes), disabled(aDisabled)
 { }
 
@@ -83,7 +83,7 @@ bool WApplication::ScriptLibrary::operator== (const ScriptLibrary& other) const
 
 WApplication::WApplication(const WEnvironment& env
 #if !(defined(DOXYGEN_ONLY) || defined(WT_TARGET_JAVA))
-			   , WtLibVersion version
+               , WtLibVersion version
 #endif
 )
   : session_(env.session_),
@@ -165,7 +165,7 @@ WApplication::WApplication(const WEnvironment& env
     widgetRoot_ = new WContainerWidget(domRoot_);
     WT_DEBUG(widgetRoot_->setObjectName("wt-app-root"));
     widgetRoot_->resize(WLength::Auto,
-			WLength(100, WLength::Percentage));
+            WLength(100, WLength::Percentage));
   } else {
     ajaxMethod_ = DynamicScriptTag;
 
@@ -182,15 +182,15 @@ WApplication::WApplication(const WEnvironment& env
    * for Wt's built-in widgets and are relatively harmless.
    */
   styleSheet_.addRule("table", "border-collapse: collapse; border: 0px;"
-		      "border-spacing: 0px");
+              "border-spacing: 0px");
   styleSheet_.addRule("div, td, img",
-		      "margin: 0px; padding: 0px; border: 0px");
+              "margin: 0px; padding: 0px; border: 0px");
   styleSheet_.addRule("td", "vertical-align: top;");
   styleSheet_.addRule("td", "text-align: left;");
   styleSheet_.addRule(RTL "td", "text-align: right;");
   styleSheet_.addRule("button", "white-space: nowrap;");
   styleSheet_.addRule("button img",
-		      "vertical-align: middle; padding-right: 10px");
+              "vertical-align: middle; padding-right: 10px");
   styleSheet_.addRule("video", "display: block");
 
   if (environment().contentType() == WEnvironment::XHTML1) {
@@ -205,22 +205,22 @@ WApplication::WApplication(const WEnvironment& env
    * Standard Wt CSS styles: resources, button wrap and form validation
    */
   styleSheet_.addRule("iframe.Wt-resource",
-		      "width: 0px; height: 0px; border: 0px;");
+              "width: 0px; height: 0px; border: 0px;");
   if (environment().agentIsIElt(9))
     styleSheet_.addRule("iframe.Wt-shim",
-			"position: absolute; top: -1px; left: -1px; "
-			"z-index: -1;"
-			"opacity: 0; filter: alpha(opacity=0);"
-			"border: none; margin: 0; padding: 0;");
+            "position: absolute; top: -1px; left: -1px; "
+            "z-index: -1;"
+            "opacity: 0; filter: alpha(opacity=0);"
+            "border: none; margin: 0; padding: 0;");
   styleSheet_.addRule(".Wt-wrap",
-		      "border: 0px;"
-		      "margin: 0px;"
-		      "padding: 0px;"
-		      "font: inherit; "
-		      "cursor: pointer; cursor: hand;"
-		      "background: transparent;"
-		      "text-decoration: none;"
-		      "color: inherit;");
+              "border: 0px;"
+              "margin: 0px;"
+              "padding: 0px;"
+              "font: inherit; "
+              "cursor: pointer; cursor: hand;"
+              "background: transparent;"
+              "text-decoration: none;"
+              "color: inherit;");
 
   styleSheet_.addRule(".Wt-wrap", "text-align: left;");
   styleSheet_.addRule(RTL ".Wt-wrap", "text-align: right;");
@@ -228,31 +228,31 @@ WApplication::WApplication(const WEnvironment& env
 
   if (environment().agentIsIE())
     styleSheet_.addRule(".Wt-wrap",
-			"margin: -1px 0px -3px;");
+            "margin: -1px 0px -3px;");
   //styleSheet_.addRule("a.Wt-wrap", "text-decoration: none;");
   styleSheet_.addRule("span.Wt-disabled", "color: gray;");
   styleSheet_.addRule("fieldset.Wt-disabled legend", "color: gray;");
   styleSheet_.addRule(".unselectable",
-		      "-moz-user-select:-moz-none;"
-		      "-khtml-user-select: none;"
-		      "-webkit-user-select: none;"
-		      "user-select: none;");
+              "-moz-user-select:-moz-none;"
+              "-khtml-user-select: none;"
+              "-webkit-user-select: none;"
+              "user-select: none;");
   styleSheet_.addRule(".selectable",
-		      "-moz-user-select: text;"
-		      "-khtml-user-select: normal;"
-		      "-webkit-user-select: text;"
-		      "user-select: text;");
+              "-moz-user-select: text;"
+              "-khtml-user-select: normal;"
+              "-webkit-user-select: text;"
+              "user-select: text;");
   styleSheet_.addRule(".Wt-sbspacer", "float: right; width: 16px; height: 1px;"
-		      "border: 0px; display: none;");
+              "border: 0px; display: none;");
   styleSheet_.addRule(".Wt-domRoot", "position: relative;");
   styleSheet_.addRule("body.Wt-layout", std::string() +
-		      "height: 100%; width: 100%;"
-		      "margin: 0px; padding: 0px; border: none;"
-		      + (environment().javaScript() ? "overflow:hidden" : ""));
+              "height: 100%; width: 100%;"
+              "margin: 0px; padding: 0px; border: none;"
+              + (environment().javaScript() ? "overflow:hidden" : ""));
   styleSheet_.addRule("html.Wt-layout", std::string() +
-		      "height: 100%; width: 100%;"
-		      "margin: 0px; padding: 0px; border: none;"
-		      + (environment().javaScript() ? "overflow:hidden" : ""));
+              "height: 100%; width: 100%;"
+              "margin: 0px; padding: 0px; border: none;"
+              + (environment().javaScript() ? "overflow:hidden" : ""));
 
   if (environment().agentIsOpera())
     if (environment().userAgent().find("Mac OS X") != std::string::npos)
@@ -351,10 +351,10 @@ std::string WApplication::onePixelGifUrl()
 
     static const unsigned char gifData[]
       = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00,
-	  0x80, 0x00, 0x00, 0xdb, 0xdf, 0xef, 0x00, 0x00, 0x00, 0x21,
-	  0xf9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00,
-	  0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44,
-	  0x01, 0x00, 0x3b };
+      0x80, 0x00, 0x00, 0xdb, 0xdf, 0xef, 0x00, 0x00, 0x00, 0x21,
+      0xf9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00,
+      0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44,
+      0x01, 0x00, 0x3b };
 
     w->setData(gifData, 43);
     onePixelGifUrl_ = w->url();
@@ -420,8 +420,8 @@ std::string WApplication::resourcesUrl()
 
   return WApplication::instance()->resolveRelativeUrl(result);
 #else
-  WApplication *app = WApplication::instance(); 
-  const Configuration& conf = app->environment().server()->configuration(); 
+  WApplication *app = WApplication::instance();
+  const Configuration& conf = app->environment().server()->configuration();
   const std::string* path = conf.property(WApplication::RESOURCES_URL);
   /*
    * Arghll... we should in fact know when we need the absolute URL: only
@@ -433,7 +433,7 @@ std::string WApplication::resourcesUrl()
       return result + path->substr(1);
     else
       return result + *path;
-  } else 
+  } else
     return *path;
 #endif // WT_TARGET_JAVA
 }
@@ -455,7 +455,7 @@ void WApplication::bindWidget(WWidget *widget, const std::string& domId)
 {
   if (session_->type() != WidgetSet)
     throw WException("WApplication::bindWidget() can be used only "
-		     "in WidgetSet mode.");
+             "in WidgetSet mode.");
 
   widget->setId(domId);
   domRoot2_->addWidget(widget);
@@ -483,7 +483,7 @@ void WApplication::popExposedConstraint(WWidget *w)
     unsigned j = i - 1;
     if (exposedOnly_[j] == w) {
       while (exposedOnly_.size() > j)
-	exposedOnly_.pop_back();
+    exposedOnly_.pop_back();
       break;
     }
   }
@@ -545,8 +545,8 @@ void WApplication::useStyleSheet(const std::string& uri)
 }
 
 void WApplication::useStyleSheet(const std::string& uri,
-				 const std::string& condition,
-				 const std::string& media)
+                 const std::string& condition,
+                 const std::string& media)
 {
   bool display = true;
 
@@ -557,15 +557,15 @@ void WApplication::useStyleSheet(const std::string& uri,
 
       switch (environment().agent()) {
       case WEnvironment::IEMobile:
-	thisVersion = 5; break;
+    thisVersion = 5; break;
       case WEnvironment::IE6:
-	thisVersion = 6; break;
+    thisVersion = 6; break;
       case WEnvironment::IE7:
-	thisVersion = 7; break;
+    thisVersion = 7; break;
       case WEnvironment::IE8:
-	thisVersion = 8; break;
+    thisVersion = 8; break;
       default:
-	thisVersion = 9; break;	
+    thisVersion = 9; break;
       }
 
       enum { lte, lt, eq, gt, gte } cond = eq;
@@ -574,42 +574,42 @@ void WApplication::useStyleSheet(const std::string& uri,
       std::string r = condition;
 
       while (!r.empty()) {
-	if (r.length() >= 3 && r.substr(0, 3) == "IE ") {
-	  r = r.substr(3);
-	} else if (r[0] == '!') {
-	  r = r.substr(1);
-	  invert = !invert;
-	} else if (r.length() >= 4 && r.substr(0, 4) == "lte ") {
-	  r = r.substr(4);
-	  cond = lte;
-	} else if (r.length() >= 3 && r.substr(0, 3) == "lt ") {
-	  r = r.substr(3);
-	  cond = lt;
-	} else if (r.length() >= 3 && r.substr(0, 3) == "gt ") {
-	  r = r.substr(3);
-	  cond = gt;
-	} else if (r.length() >= 4 && r.substr(0, 4) == "gte ") {
-	  r = r.substr(4);
-	  cond = gte;
-	} else {
-	  try {
-	    int version = boost::lexical_cast<int>(r);
-	    switch (cond) {
-	    case eq:  display = thisVersion == version; break;
-	    case lte: display = thisVersion <= version; break;
-	    case lt:  display = thisVersion <  version; break;
-	    case gte: display = thisVersion >= version; break;
-	    case gt:  display = thisVersion >  version; break;
-	    }
-	    if (invert)
-	      display = !display;
-	  } catch (std::exception& e) {
-	    LOG_ERROR("Could not parse condition: '" << condition << "'");
-	  }
-	  r.clear();
-	}
+    if (r.length() >= 3 && r.substr(0, 3) == "IE ") {
+      r = r.substr(3);
+    } else if (r[0] == '!') {
+      r = r.substr(1);
+      invert = !invert;
+    } else if (r.length() >= 4 && r.substr(0, 4) == "lte ") {
+      r = r.substr(4);
+      cond = lte;
+    } else if (r.length() >= 3 && r.substr(0, 3) == "lt ") {
+      r = r.substr(3);
+      cond = lt;
+    } else if (r.length() >= 3 && r.substr(0, 3) == "gt ") {
+      r = r.substr(3);
+      cond = gt;
+    } else if (r.length() >= 4 && r.substr(0, 4) == "gte ") {
+      r = r.substr(4);
+      cond = gte;
+    } else {
+      try {
+        int version = boost::lexical_cast<int>(r);
+        switch (cond) {
+        case eq:  display = thisVersion == version; break;
+        case lte: display = thisVersion <= version; break;
+        case lt:  display = thisVersion <  version; break;
+        case gte: display = thisVersion >= version; break;
+        case gt:  display = thisVersion >  version; break;
+        }
+        if (invert)
+          display = !display;
+      } catch (std::exception& e) {
+        LOG_ERROR("Could not parse condition: '" << condition << "'");
       }
-    } 
+      r.clear();
+    }
+      }
+    }
   }
 
   if (display) {
@@ -718,7 +718,7 @@ void WApplication::removeExposedSignal(Wt::EventSignalBase *signal)
   if (exposedSignals_.erase(s))
     LOG_DEBUG("removeExposedSignal: " << s);
   else
-    LOG_DEBUG("removeExposedSignal of non-exposed " << s << "??");    
+    LOG_DEBUG("removeExposedSignal of non-exposed " << s << "??");
 }
 
 EventSignalBase *
@@ -738,7 +738,7 @@ WApplication::decodeExposedSignal(const std::string& signalName) const
 
 EventSignalBase *
 WApplication::decodeExposedSignal(const std::string& objectId,
-				  const std::string& name)
+                  const std::string& name)
 {
   std::string signalName = (objectId == "app" ? id() : objectId) + '.' + name;
 
@@ -752,7 +752,7 @@ std::string WApplication::resourceMapKey(WResource *resource)
 }
 
 std::string WApplication::addExposedResource(WResource *resource,
-					     const std::string& internalPath)
+                         const std::string& internalPath)
 {
   exposedResources_[resourceMapKey(resource)] = resource;
 
@@ -788,11 +788,11 @@ void WApplication::removeExposedResource(WResource *resource)
   }
 }
 
-WResource *WApplication::decodeExposedResource(const std::string& resourceKey) 
+WResource *WApplication::decodeExposedResource(const std::string& resourceKey)
   const
 {
   ResourceMap::const_iterator i = exposedResources_.find(resourceKey);
-  
+
   if (i != exposedResources_.end())
     return i->second;
   else {
@@ -885,7 +885,7 @@ WLocalizedStrings *WApplication::localizedStrings()
 WMessageResourceBundle& WApplication::builtinLocalizedStrings()
 {
   return *(dynamic_cast<WMessageResourceBundle *>
-	   (localizedStrings_->items().back()));
+       (localizedStrings_->items().back()));
 }
 
 void WApplication::setLocalizedStrings(WLocalizedStrings *translator)
@@ -992,10 +992,10 @@ void WApplication::setTwoPhaseRenderingThreshold(int bytes)
 }
 
 void WApplication::setCookie(const std::string& name,
-			     const std::string& value, int maxAge,
-			     const std::string& domain,
-			     const std::string& path,
-			     bool secure)
+                 const std::string& value, int maxAge,
+                 const std::string& domain,
+                 const std::string& path,
+                 bool secure)
 {
   WDateTime expires = WDateTime::currentDateTime();
   expires = expires.addSecs(maxAge);
@@ -1004,39 +1004,39 @@ void WApplication::setCookie(const std::string& name,
 
 #ifndef WT_TARGET_JAVA
 void WApplication::setCookie(const std::string& name,
-			     const std::string& value,
-			     const WDateTime& expires,
-			     const std::string& domain,
-			     const std::string& path,
-			     bool secure)
+                 const std::string& value,
+                 const WDateTime& expires,
+                 const std::string& domain,
+                 const std::string& path,
+                 bool secure)
 {
   session_->renderer().setCookie(name, value, expires, domain, path, secure);
 }
 #endif // WT_TARGET_JAVA
 
 void WApplication::removeCookie(const std::string& name,
-				const std::string& domain,
-				const std::string& path)
+                const std::string& domain,
+                const std::string& path)
 {
   session_->renderer().setCookie(name, std::string(),
-				 WDateTime(WDate(1970,1,1)),
-				 domain, path, false);
+                 WDateTime(WDate(1970,1,1)),
+                 domain, path, false);
 }
 
 void WApplication::addMetaLink(const std::string &href,
-			       const std::string &rel,
-			       const std::string &media,
-			       const std::string &hreflang,
-			       const std::string &type,
-			       const std::string &sizes,
-			       bool disabled)
+                   const std::string &rel,
+                   const std::string &media,
+                   const std::string &hreflang,
+                   const std::string &type,
+                   const std::string &sizes,
+                   bool disabled)
 {
   if (environment().javaScript())
     LOG_WARN("WApplication::addMetaLink() with no effect");
 
-  if (href.empty()) 
+  if (href.empty())
     throw WException("WApplication::addMetaLink() href cannot be empty!");
-  if (rel.empty()) 
+  if (rel.empty())
     throw WException("WApplication::addMetaLink() rel cannot be empty!");
 
   for (unsigned i = 0; i < metaLinks_.size(); ++i) {
@@ -1061,23 +1061,23 @@ void WApplication::removeMetaLink(const std::string &href)
     for (unsigned i = 0; i < metaLinks_.size(); ++i) {
       MetaLink& ml = metaLinks_[i];
       if (ml.href == href) {
-	metaLinks_.erase(metaLinks_.begin() + i);
-	return;
+    metaLinks_.erase(metaLinks_.begin() + i);
+    return;
       }
     }
 }
 
 void WApplication::addMetaHeader(const std::string& name,
-				 const WString& content,
-				 const std::string& lang)
+                 const WString& content,
+                 const std::string& lang)
 {
   addMetaHeader(MetaName, name, content, lang);
 }
 
 void WApplication::addMetaHeader(MetaHeaderType type,
-				 const std::string& name,
-				 const WString& content,
-				 const std::string& lang)
+                 const std::string& name,
+                 const WString& content,
+                 const std::string& lang)
 {
   if (environment().javaScript())
     LOG_WARN("WApplication::addMetaHeader() with no effect");
@@ -1090,9 +1090,9 @@ void WApplication::addMetaHeader(MetaHeaderType type,
 
     if (m.type == type && m.name == name) {
       if (content.empty())
-	metaHeaders_.erase(metaHeaders_.begin() + i);
+    metaHeaders_.erase(metaHeaders_.begin() + i);
       else
-	m.content = content;
+    m.content = content;
       return;
     }
   }
@@ -1102,7 +1102,7 @@ void WApplication::addMetaHeader(MetaHeaderType type,
 }
 
 void WApplication::removeMetaHeader(MetaHeaderType type,
-				    const std::string& name)
+                    const std::string& name)
 {
   if (environment().javaScript())
     LOG_WARN("removeMetaHeader() with no effect");
@@ -1114,9 +1114,9 @@ void WApplication::removeMetaHeader(MetaHeaderType type,
       metaHeaders_.erase(metaHeaders_.begin() + i);
 
       if (name.empty())
-	--i;
+    --i;
       else
-	break;
+    break;
     }
   }
 }
@@ -1169,13 +1169,13 @@ bool WApplication::internalPathMatches(const std::string& path) const
 }
 
 bool WApplication::pathMatches(const std::string& path,
-			       const std::string& query)
+                   const std::string& query)
 {
   /* Returns whether the current path start with the query */
   if (query == path
       || (path.length() > query.length()
-	  && path.substr(0, query.length()) == query
-	  && (query[query.length() - 1] == '/' || path[query.length()] == '/')))
+      && path.substr(0, query.length()) == query
+      && (query[query.length() - 1] == '/' || path[query.length()] == '/')))
     return true;
   else
     return false;
@@ -1199,8 +1199,8 @@ std::string WApplication::internalSubPath(const std::string& path) const
 
   if (!pathMatches(current, path)) {
     LOG_WARN("internalPath(): path '"
-	     << path << "' not within current path '" << internalPath()
-	     << "'");
+         << path << "' not within current path '" << internalPath()
+         << "'");
     return std::string();
   }
 
@@ -1269,7 +1269,7 @@ void WApplication::enableUpdates(bool enabled)
   if (enabled) {
     if (serverPush_ == 0 && !WebSession::Handler::instance()->request())
       LOG_WARN("WApplication::enableUpdates(true): "
-	       "should be called from within event loop");
+           "should be called from within event loop");
     ++serverPush_;
   } else
     --serverPush_;
@@ -1348,28 +1348,28 @@ public:
 
     for (;;) {
       if (handler_->lock().try_lock())
-	return;
+    return;
 
       WebSession::SyncLocks& syncLocks = app->session_->syncLocks_;
       boost::mutex::scoped_lock guard(syncLocks.state_);
 
       // See if the current application thread is being held in a sync lock
       if (syncLocks.lastId_ > syncLocks.lockedId_) {
-	LOG_DEBUG("using a sync lock");
-	delete handler_;
-	handler_ = 0;
+    LOG_DEBUG("using a sync lock");
+    delete handler_;
+    handler_ = 0;
 
-	assert(syncLocks.lastId_ == syncLocks.lockedId_ + 1);
-	syncLockId_ = syncLocks.lockedId_ = syncLocks.lastId_;
+    assert(syncLocks.lastId_ == syncLocks.lockedId_ + 1);
+    syncLockId_ = syncLocks.lockedId_ = syncLocks.lastId_;
 
-	WebSession::Handler::attachThreadToSession(app->weakSession_.lock());
-	return;
+    WebSession::Handler::attachThreadToSession(app->weakSession_.lock());
+    return;
       }
 
       if (selfApp) {
-	int id = selfApp->startWaitingAtLock();
-	boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-	selfApp->endWaitingAtLock(id);
+    int id = selfApp->startWaitingAtLock();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    selfApp->endWaitingAtLock(id);
       }
     }
 #endif // WT_THREADED
@@ -1383,7 +1383,7 @@ public:
       assert(syncLockId_);
 
       WebSession::SyncLocks& syncLocks
-	= WApplication::instance()->session_->syncLocks_;
+    = WApplication::instance()->session_->syncLocks_;
 
       assert(syncLockId_ == syncLocks.lockedId_);
       --syncLocks.lockedId_;
@@ -1401,7 +1401,7 @@ private:
 
   // Sync lock state
   int syncLockId_;
-  WebSession::Handler *prevHandler_; 
+  WebSession::Handler *prevHandler_;
 };
 
 WApplication::UpdateLock::UpdateLock(WApplication *app)
@@ -1466,7 +1466,7 @@ void WApplication::UpdateLock::release()
 #endif // WT_TARGET_JAVA
 
 void WApplication::doJavaScript(const std::string& javascript,
-				bool afterLoaded)
+                bool afterLoaded)
 {
   if (afterLoaded) {
     afterLoadJavaScript_ += javascript;
@@ -1485,7 +1485,7 @@ void WApplication::addAutoJavaScript(const std::string& javascript)
 }
 
 void WApplication::declareJavaScriptFunction(const std::string& name,
-					     const std::string& function)
+                         const std::string& function)
 {
   doJavaScript(javaScriptClass_ + '.' + name + '=' + function + ';', false);
 }
@@ -1503,7 +1503,7 @@ void WApplication::streamBeforeLoadJavaScript(std::ostream& out, bool all)
   if (!all) {
     if (newBeforeLoadJavaScript_)
       out << beforeLoadJavaScript_.substr(beforeLoadJavaScript_.length()
-					  - newBeforeLoadJavaScript_);
+                      - newBeforeLoadJavaScript_);
   } else {
     out << beforeLoadJavaScript_;
   }
@@ -1519,7 +1519,7 @@ void WApplication::processEvents()
 {
   /* set timeout to allow other events to be interleaved */
   doJavaScript("setTimeout(\"" + javaScriptClass_
-	       + "._p_.update(null,'none',null,true);\",0);");
+           + "._p_.update(null,'none',null,true);\",0);");
 
   if (!environment().isTest())
     session_->doRecursiveEventLoop();
@@ -1556,7 +1556,7 @@ bool WApplication::requireJQuery(const std::string& uri)
 
 #ifndef WT_TARGET_JAVA
 bool WApplication::readConfigurationProperty(const std::string& name,
-					     std::string& value)
+                         std::string& value)
 {
   WebSession *session = WebSession::instance();
   if (session)
@@ -1566,7 +1566,7 @@ bool WApplication::readConfigurationProperty(const std::string& name,
 }
 #else
 std::string *WApplication::readConfigurationProperty(const std::string& name,
-						     const std::string& value)
+                             const std::string& value)
 {
   WebSession *session = WebSession::instance();
   if (session)
@@ -1604,13 +1604,13 @@ void WApplication::streamJavaScriptPreamble(std::ostream& out, bool all)
   if (all) {
     out << "window.currentApp = " + javaScriptClass_ + ";";
     for (std::set<const char *>::const_iterator i = javaScriptLoaded_.begin();
-	 i != javaScriptLoaded_.end(); ++i)
+     i != javaScriptLoaded_.end(); ++i)
       loadJavaScriptFile(out, *i);
   } else {
     if (!newJavaScriptToLoad_.empty()) {
       out << "window.currentApp = " + javaScriptClass_ + ";";
       for (unsigned i = 0; i < newJavaScriptToLoad_.size(); ++i)
-	loadJavaScriptFile(out, newJavaScriptToLoad_[i]);
+    loadJavaScriptFile(out, newJavaScriptToLoad_[i]);
     }
   }
 
@@ -1628,7 +1628,7 @@ void WApplication::loadJavaScriptFile(std::ostream& out, const char *jsFile)
 #else
 
 void WApplication::loadJavaScript(const char *jsFile,
-				  const WJavaScriptPreamble& preamble)
+                  const WJavaScriptPreamble& preamble)
 {
   if (!javaScriptLoaded(preamble.name)) {
     javaScriptLoaded_.insert(jsFile);
@@ -1652,10 +1652,10 @@ void WApplication::streamJavaScriptPreamble(std::ostream& out, bool all)
 
     if (preamble.type == JavaScriptFunction) {
       out << scope << '.' << preamble.name << " = function() { return ("
-	  << preamble.src << ").apply(" << scope << ", arguments) };";
+      << preamble.src << ").apply(" << scope << ", arguments) };";
     } else {
       out << scope << '.' << preamble.name << " = " << preamble.src
-	  << std::endl;
+      << std::endl;
     }
   }
 
@@ -1670,7 +1670,7 @@ bool WApplication::javaScriptLoaded(const char *jsFile) const
 }
 
 void WApplication::setFocus(const std::string& id,
-			    int selectionStart, int selectionEnd)
+                int selectionStart, int selectionEnd)
 {
   focusId_ = id;
   selectionStart_ = selectionStart;
@@ -1690,7 +1690,8 @@ void WApplication::resumeRendering()
 #endif // WT_TARGET_JAVA
 
 #ifndef WT_CNOR
-void WtEmitBindSignal(const boost::shared_ptr< boost::signal0<void> >& s)
+//void WtEmitBindSignal(const boost::shared_ptr< boost::signal0<void> >& s)
+void WtEmitBindSignal(const boost::shared_ptr< boost::signals2::signal<void()> >& s)
 {
   (*s)();
 }
